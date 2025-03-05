@@ -22,6 +22,7 @@ export const GetStatsSchema = z.object({
 });
 
 export const ReadFeedSchema = z.object({
+    network: z.string(),
     feed: z.string(),
 });
 
@@ -47,4 +48,10 @@ export const CheckSignatureSchema = z.object({
     message: z.string(),
     signature: z.string(),
     signerAddress: z.string(),
+})
+
+export const SignTokenTransferSchema = z.object({
+    amount: z.number(),
+    recipient: z.string(),
+    duration: z.number(),
 })

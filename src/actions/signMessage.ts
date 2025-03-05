@@ -25,7 +25,6 @@ export interface SignMessageContent extends Content {
 function isSignMessageContent(
     content: any
 ): content is SignMessageContent {
-    // elizaLogger.debug("Content for sign message", content);
     console.log("Content for sign message", content);
     return (
         typeof content.network === "string" &&
@@ -38,7 +37,7 @@ export const signMessageAction: Action = {
     similes: [
         "MESSAGE_SIGNING",
         "ETHEREUM_SIGNATURE_OF_MESSAGE",
-        "SIGNING",
+        "MESSAGE",
     ],
     validate: async (runtime: IAgentRuntime, _message: Memory) => {
         await validateFlareConfig(runtime);

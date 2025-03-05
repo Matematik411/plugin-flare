@@ -28,7 +28,6 @@ export interface TransferContent extends Content {
 function isTransferContent(
     content: any
 ): content is TransferContent {
-    // elizaLogger.debug("Content for transfer", content);
     console.log("Content for transfer", content);
     return (
         typeof content.network === "string" &&

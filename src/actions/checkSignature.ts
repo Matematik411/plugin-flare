@@ -28,7 +28,6 @@ export interface CheckSignatureContent extends Content {
 function isCheckSignatureContent(
     content: any
 ): content is CheckSignatureContent {
-    // elizaLogger.debug("Content for checking the signature", content);
     console.log("Content for checking the signature", content);
     return (
         typeof content.network === "string" &&

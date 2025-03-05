@@ -19,16 +19,16 @@ import { readFeedTemplate } from "../templates";
 import { ReadFeedSchema } from "../types";
 
 export interface ReadFeedContent extends Content {
+    network: string;
     feed: string;
 }
 
 function isReadFeedContent(
-    runtime: IAgentRuntime,
     content: any
 ): content is ReadFeedContent {
-    // elizaLogger.debug("Content for reading a feed", content);
     console.log("Content for reading a feed", content);
     return (
+        typeof content.network === "string" &&
         typeof content.feed === "string"
     );
 }
@@ -48,7 +48,7 @@ export const readFeedAction: Action = {
     description:
         `MUST use this action if the user requests to read a feed on the FTSO, 
         the request might be varied, but it will always be a query about FTSO feeds. 
-        The actions reads the feed off the Coston's FTSO
+        The actions reads the feed off the given network's FtsoV2 contract.
         DO NOT use it, if it only asks for current balance.`,
     handler: async (
         runtime: IAgentRuntime,
@@ -83,7 +83,7 @@ export const readFeedAction: Action = {
         const callArguments = content.object;
 
         // Validate reading of a feed content
-        if (!isReadFeedContent(runtime, callArguments)) {
+        if (!isReadFeedContent(callArguments)) {
             elizaLogger.error("Invalid content for READ_FEED action.");
             callback?.({
                 text: "Unable to process reading request. Invalid content provided.",
@@ -93,9 +93,9 @@ export const readFeedAction: Action = {
         }
 
 
-        // This action always reads off the Coston2's FTSO
+        // This action reads off the given network's FTSO
         const networkService = createNetworkService(
-            "coston2"
+            callArguments.network as string
         )
         try {
             const feedInfo = await networkService.readFeedFtso(
@@ -107,7 +107,7 @@ export const readFeedAction: Action = {
             const value = formatUnits(feedInfo[0], feedInfo[1]);
             if (callback) {
                 callback({
-                    text: `At the time ${date.toLocaleString()}, the value of ${callArguments.feed} on Coston2's FTSO is ${value} USD.`
+                    text: `At the time ${date.toLocaleString()}, the value of ${callArguments.feed} on ${callArguments.network}'s FTSO is ${value} USD.`
                 });
                 return true;
             }

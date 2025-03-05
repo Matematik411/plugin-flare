@@ -24,7 +24,6 @@ export interface GetStatsContent extends Content {
 function isGetStatsContent(
     content: any
 ): content is GetStatsContent {
-    // elizaLogger.debug("Content for getting stats", content);
     console.log("Content for getting stats", content);
     return (
         typeof content.network === "string"
@@ -38,7 +37,10 @@ export const getStatsAction: Action = {
         "NETWORK_STATS",
         "STATS",
     ],
-    description: "Get stats of the selected network. DO NOT use it, if it only asks for current balance.",
+    description:
+        `Get stats of the selected network. 
+        The request might be varied, but it will always ask about the stats of 
+        a network. DO NOT use it, if it only asks for current balance.`,
     validate: async (runtime: IAgentRuntime) => {
         await validateFlareConfig(runtime);
         return true;

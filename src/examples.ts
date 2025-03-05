@@ -71,7 +71,7 @@ export const getReadFeedExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: "What is the value of BTC on the FTSO?",
+                text: "What is the value of BTC on the Flare's FTSO?",
             },
         },
         {
@@ -86,7 +86,7 @@ export const getReadFeedExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: "Tell me the FLR feed value on the FTSO.",
+                text: "Tell me the FLR feed value on Songbird FTSO.",
             },
         },
         {
@@ -256,6 +256,41 @@ export const getCheckSignatureExamples: ActionExample[][] = [
             content: {
                 text: "I am checking the signature now.",
                 action: "CHECK_SIGNATURE",
+            },
+        }
+    ]
+]
+
+export const getSignTokenTransferExamples: ActionExample[][] = [
+    [
+        {
+            user: "{{user1}}",
+            content: {
+                text: `Sign a token transfer to the address 0x1234... with amount 
+                of 123. Let the signature be valid for 30 minutes.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: "I'll sign the given transfer.",
+                action: "SIGN_TOKEN_TRANSFER",
+            },
+        }
+    ],
+    [
+        {
+            user: "{{user1}}",
+            content: {
+                text: `I would like to sign a transfer with the following data: 
+                recipient=0x123..., amount=15, duration=1 hour.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: "I will do that now.",
+                action: "SIGN_TOKEN_TRANSFER",
             },
         }
     ]

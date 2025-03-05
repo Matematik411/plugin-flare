@@ -28,7 +28,6 @@ export interface DelegateTokensContent extends Content {
 function isDelegateTokensContent(
     content: any
 ): content is DelegateTokensContent {
-    // elizaLogger.debug("Content for delegation", content);
     console.log("Content for delegation", content);
     return (
         typeof content.network === "string" &&

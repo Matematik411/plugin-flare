@@ -27,7 +27,6 @@ export interface WrapTokensContent extends Content {
 function isWrapTokensContent(
     content: any
 ): content is WrapTokensContent {
-    // elizaLogger.debug("Content for wrapping", content);
     console.log("Content for wrapping", content);
     return (
         typeof content.network === "string" &&
@@ -37,9 +36,6 @@ function isWrapTokensContent(
 }
 
 export const wrapTokensAction: Action = {
-    // 550 C2FLR 
-    // 225 CFLR
-    // 0.000003	SGB
     name: "WRAP_TOKENS",
     similes: [
         "EXCHANGE_FOR_WRAPPED_TOKENS",

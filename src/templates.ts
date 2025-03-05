@@ -5,9 +5,9 @@ Extract the following details for processing a transfer:
 - **network** (string): The blockchain network to use. Allowed values are:
     static networks: {
         readonly flare: "flare";
-        readonly flareTestnet: "coston2";
+        readonly coston2: "coston2";
         readonly songbird: "songbird";
-        readonly songbirdTestnet: "coston";
+        readonly coston: "coston";
     };
 
 Provide the details in the following JSON format:
@@ -42,9 +42,9 @@ Extract the following details for processing a delegation of tokens:
 - **network** (string): The blockchain network to use. Allowed values are:
     static networks: {
         readonly flare: "flare";
-        readonly flareTestnet: "coston2";
+        readonly coston2: "coston2";
         readonly songbird: "songbird";
-        readonly songbirdTestnet: "coston";
+        readonly coston: "coston";
     };
 
 Provide the details in the following JSON format:
@@ -75,9 +75,9 @@ Extract the following details for processing a query for stats of a network:
 - **network** (string): The blockchain network to use. Allowed values are:
     static networks: {
         readonly flare: "flare";
-        readonly flareTestnet: "coston2";
+        readonly coston2: "coston2";
         readonly songbird: "songbird";
-        readonly songbirdTestnet: "coston";
+        readonly coston: "coston";
     };
 
 Provide the details in the following JSON format:
@@ -110,9 +110,9 @@ Extract the following details for processing a request for wrapping tokens:
 - **network** (string): The blockchain network to use. Allowed values are:
     static networks: {
         readonly flare: "flare";
-        readonly flareTestnet: "coston2";
+        readonly coston2: "coston2";
         readonly songbird: "songbird";
-        readonly songbirdTestnet: "coston";
+        readonly coston: "coston";
     };
 
 Provide the details in the following JSON format:
@@ -150,18 +150,27 @@ not provide all the details of the query:
 export const readFeedTemplate = `
 Extract the following details for processing a query for a token feed on the ftso:
 - **feed** (string): The asset ID for the token the query is about (e.g., BTC, FLR, ETH).
+- **network** (string): The blockchain network to use. Allowed values are:
+    static networks: {
+        readonly flare: "flare";
+        readonly coston2: "coston2";
+        readonly songbird: "songbird";
+        readonly coston: "coston";
+    };
 
 Provide the details in the following JSON format:
 \`\`\`json
 {
-    "feed": "<feed>"
+    "feed": "<feed>",
+    "network": "<network>"
 }
 \`\`\`
 
-Example response for the query for the Bitcoin feed:
+Example response for the query for the Bitcoin feed on Flare's FTSO:
 \`\`\`json
 {
-    "feed": "BTC"
+    "feed": "BTC",
+    "network": "Flare"
 }
 \`\`\`
 
@@ -176,9 +185,9 @@ Extract the following details for processing a signing of a message:
 - **network** (string): The blockchain network to use. Allowed values are:
     static networks: {
         readonly flare: "flare";
-        readonly flareTestnet: "coston2";
+        readonly coston2: "coston2";
         readonly songbird: "songbird";
-        readonly songbirdTestnet: "coston";
+        readonly coston: "coston";
     };
 
 Provide the details in the following JSON format:
@@ -201,6 +210,7 @@ Here are the recent user messages for context, only use the older user commands 
 not provide all the details of the query:
 {{recentMessages}}
 `;
+
 export const checkSignatureTemplate = `
 Extract the following details for processing a request to check the message signature:
 - **message** (string): The message that is to be signed.
@@ -209,9 +219,9 @@ Extract the following details for processing a request to check the message sign
 - **network** (string): The blockchain network to use. Allowed values are:
     static networks: {
         readonly flare: "flare";
-        readonly flareTestnet: "coston2";
+        readonly coston2: "coston2";
         readonly songbird: "songbird";
-        readonly songbirdTestnet: "coston";
+        readonly coston: "coston";
     };
 
 Provide the details in the following JSON format:
@@ -232,6 +242,37 @@ for the message "Hey!" from 0x0123456789012345678901234567890123456789 on Flare:
     "message": "Hey!",
     "signature": "0x0123...",
     "signerAddress": "0x0123456789012345678901234567890123456789"
+}
+\`\`\`
+
+Here are the recent user messages for context, only use the older user commands if the latest does 
+not provide all the details of the query:
+{{recentMessages}}
+`;
+
+export const signTokenTransferTemplate = `
+Extract the following details for processing a request to sign a token transfer:
+- **amount** (number): The amount of tokens to be sent.
+- **recipient** (string): An address receiving the funds.
+- **duration** (number): The length of time the signature will be valid. The given time
+    is changed into duration in seconds. (e.g. "1 hour" is changed to duration=3600)
+
+Provide the details in the following JSON format:
+\`\`\`json
+{
+    "amount": <amount>,
+    "recipient": "<recipient>",
+    "duration": <duration>,
+}
+\`\`\`
+
+Example response for the request for signing token transfer for an amount of 100 with 
+the duration of 1 hour to the address 0x1234...:
+\`\`\`json
+{
+    "amount": 100,
+    "recipient": "0x1234...",
+    "duration: 3600,
 }
 \`\`\`
 

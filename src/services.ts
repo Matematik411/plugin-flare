@@ -3,13 +3,54 @@ import { Address, Hash, keccak256, parseEther, parseUnits, toBytes } from "viem"
 import {
     StatsResponse
 } from "./types";
-import { getAccount, getContractAddress, getDecimals, getNetwork, getPublicClient, getWalletClient } from "./utils";
+import { getAccount, getDecimals, getNetwork, getPublicClient, getWalletClient } from "./utils";
 
 export const createNetworkService = (chainName: string) => {
+    const selectedChain = getNetwork(chainName);
+
+    const getAddress = async (
+        runtime: IAgentRuntime,
+        contractName: string,
+    ): Promise<string> => {
+        if (contractName == "Verifier") {
+            const verifier = runtime.getSetting(`${chainName.toUpperCase().replaceAll(" ", "")}_VERIFIER`);
+            return verifier;
+        }
+        else {
+            const publicClient = getPublicClient(runtime, selectedChain);
+            const flareContractRegistry = runtime.getSetting("CONTRACT_REGISTRY");
+            const address = await publicClient.readContract({
+                address: flareContractRegistry,
+                abi: [{
+                    "inputs": [
+                        {
+                            "internalType": "string",
+                            "name": "_name",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "getContractAddressByName",
+                    "outputs": [
+                        {
+                            "internalType": "address",
+                            "name": "",
+                            "type": "address"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },],
+                functionName: "getContractAddressByName",
+                args: [contractName]
+
+            });
+            return address;
+        }
+    }
+
     const getStats = async (): Promise<StatsResponse> => {
         try {
-            const network = getNetwork(chainName);
-            const url = network.blockExplorers.default.apiUrl + "/v2/stats"
+            const url = selectedChain.blockExplorers.default.apiUrl + "/v2/stats"
             const response = await fetch(url);
             if (!response.ok) {
                 const error = await response.json();
@@ -28,8 +69,7 @@ export const createNetworkService = (chainName: string) => {
         runtime: IAgentRuntime,
         recipient: Address,
         amount: number
-    ) => {
-        const selectedChain = getNetwork(chainName);
+    ): Promise<Hash> => {
         const walletClient = getWalletClient(runtime, selectedChain);
         const decimals = await getDecimals(
             selectedChain
@@ -41,8 +81,7 @@ export const createNetworkService = (chainName: string) => {
         return tx as Hash;
     }
 
-
-    const getFeedId = (category: string, feedName: string) => {
+    const getFeedId = (category: string, feedName: string): string => {
         const hexFeedName = Array.from(feedName)
             .map((c: string) => c.charCodeAt(0).toString(16).padStart(2, "0"))
             .join("");
@@ -53,10 +92,9 @@ export const createNetworkService = (chainName: string) => {
     const readFeedFtso = async (
         runtime: IAgentRuntime,
         feed: string
-    ) => {
-        const selectedChain = getNetwork(chainName);
+    ): Promise<number> => {
         const publicClient = getPublicClient(runtime, selectedChain);
-        const ftsoAddress = getContractAddress(runtime, chainName, "FTSO")
+        const ftsoAddress = await getAddress(runtime, "FtsoV2")
         const feedId = "0x" + getFeedId("01", `${feed}/USD`);
         const feedValue = await publicClient.readContract({
             address: ftsoAddress,
@@ -101,9 +139,8 @@ export const createNetworkService = (chainName: string) => {
         action: string,
         amount: number,
     ) => {
-        const selectedChain = getNetwork(chainName);
         const publicClient = getPublicClient(runtime, selectedChain);
-        const wNatAddress = getContractAddress(runtime, chainName, "WNAT")
+        const wNatAddress = await getAddress(runtime, "WNat");
 
         let functionName: string;
         let sentValue: number;
@@ -166,9 +203,8 @@ export const createNetworkService = (chainName: string) => {
         delegated: string,
         bips: number
     ) => {
-        const selectedChain = getNetwork(chainName);
         const publicClient = getPublicClient(runtime, selectedChain);
-        const wNatAddress = getContractAddress(runtime, chainName, "WNAT");
+        const wNatAddress = await getAddress(runtime, "WNat");
         try {
             const { result, request } = await publicClient.simulateContract({
                 account: getAccount(runtime),
@@ -216,7 +252,6 @@ export const createNetworkService = (chainName: string) => {
 
         try {
             // hash and sign the message (double keccak is used)
-            const selectedChain = getNetwork(chainName);
             const walletClient = getWalletClient(runtime, selectedChain);
             const messageHash = keccak256(toBytes(message));
             const signature = await walletClient.signMessage({ message: { raw: messageHash } });
@@ -226,7 +261,6 @@ export const createNetworkService = (chainName: string) => {
             console.log(`[SIGN MESSAGE] Error constructing the signature: ${error}`);
             return;
         }
-
     }
 
     const checkMessageSignature = async (
@@ -235,10 +269,9 @@ export const createNetworkService = (chainName: string) => {
         signature: string,
         signerAddress: string,
     ) => {
-        const selectedChain = getNetwork(chainName);
-        const publicClient = getPublicClient(runtime, selectedChain);
-        const verifierAddress = getContractAddress(runtime, chainName, "VERIFIER");
         try {
+            const publicClient = getPublicClient(runtime, selectedChain);
+            const verifierAddress = getAddress(runtime, "Verifier");
             const isValid = await publicClient.readContract({
                 address: verifierAddress,
                 abi: [
@@ -288,7 +321,57 @@ export const createNetworkService = (chainName: string) => {
 
     }
 
-    return { getStats, transferTokens, readFeedFtso, wrapTokens, delegateTokens, signMessage, checkMessageSignature };
+    const signTokenTransfer = async (
+        runtime: IAgentRuntime,
+        amount: number,
+        recipient: Address,
+        duration: number
+    ) => {
+        const types = {
+            Authorization: [
+                { name: "from", type: "address" },
+                { name: "to", type: "address" },
+                { name: "value", type: "uint256" },
+                { name: "validAfter", type: "uint256" },
+                { name: "validBefore", type: "uint256" },
+                { name: "nonce", type: "bytes32" },
+            ],
+        };
+        const domain = {
+            name: "MyToken",
+            version: "1.0",
+            chainId: selectedChain.id,
+            veriyingContract: "0x0101010101010101010101010101010101010101"
+        };
+
+        // values from the query
+        const value = {
+            "from": getAccount(runtime).address,
+            "to": recipient,
+            "value": amount,
+            "validAfter": Math.floor(Date.now() / 1000),
+            "validBefore": Math.floor(Date.now() / 1000) + duration,
+            "nonce": "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+        };
+
+        try {
+            const walletClient = getWalletClient(runtime, selectedChain);
+            const signature = await walletClient.signTypedData({
+                account: getAccount(runtime),
+                domain: domain,
+                types: types,
+                primaryType: "Authorization",
+                message: value,
+            })
+            return signature;
+        } catch (error) {
+            console.log(`[SIGN TOKEN TRANSFER] Error constructing the signature: ${error}`);
+            return;
+        }
+
+    }
+
+    return { getStats, transferTokens, readFeedFtso, wrapTokens, delegateTokens, signMessage, checkMessageSignature, signTokenTransfer };
 }
 
 
