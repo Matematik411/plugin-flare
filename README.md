@@ -26,15 +26,8 @@ The following steps allow running an agent with plugin-flare.
 FLARE_PRIVATE_KEY=<your-wallet-private-key>
 
 # Flare contract addresses
-FLARE_FTSO=0xB18d3A5e5A85C65cE47f977D7F486B79F99D3d32 # flare
-FLARE_WNAT=0x1D80c49BbBCd1C0911346656B529DF9E5c2F783d # flare
-COSTON2_FTSO=0x3d893C53D9e8056135C26C8c638B76C8b60Df726 # coston 2
-COSTON2_WNAT=0xC67DCE33D7A8efA5FfEB961899C73fe01bCe9273 # coston 2
+CONTRACT_REGISTRY=0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019 # same on all networks
 COSTON2_VERIFIER=0x64c68Fa45Ed8982FE44FaD6431e55bB575d54dB4 # coston 2
-SONGBIRD_FTSO=0x988C99423360C93F334f6F331Aa8A55cfFEd34B5 # songbird
-SONGBIRD_WNAT=0x02f0826ef6aD107Cfc861152B32B52fD11BaB9ED # songbird
-COSTON_FTSO=0x5BBCc7810D72Cc1720cC97aD144926E556bE1E93 # coston 
-COSTON_WNAT=0x767b25A658E8FC8ab6eBbd52043495dB61b4ea91 # coston
 COSTON_VERIFIER=0x3bDe1A4e13023210981189bfBA84F33403Af5C6D # coston
 ```
 
@@ -44,7 +37,7 @@ COSTON_VERIFIER=0x3bDe1A4e13023210981189bfBA84F33403Af5C6D # coston
 - Make transactions
 - Check balances
 - Wrap, withdraw and delegate tokens 
-- Read FTSO feeds (currently only on coston2's FTSO)
+- Read FTSO feeds
 - Sign a string message and verify a signature of one
   
 Examples can be seen in `examples.ts` and `templates.ts`.
