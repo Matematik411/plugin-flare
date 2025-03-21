@@ -46,10 +46,16 @@ export const readFeedAction: Action = {
         return true;
     },
     description:
-        `MUST use this action if the user requests to read a feed on the FTSO, 
-        the request might be varied, but it will always be a query about FTSO feeds. 
-        The actions reads the feed off the given network's FtsoV2 contract.
-        DO NOT use it, if it only asks for current balance.`,
+        `MUST use this action if the user requests to read a feed on the FTSO.
+        The request might be varied, but it will always be a query about FTSO feeds.
+        The action reads the feed off the given network's FtsoV2 contract.
+        Can ONLY BE USED if the user provides the name of the feed and the name
+        of the network, on which we read the FTSO.
+        If any of the arguments are missing, ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it. 
+        DO NOT use this for anything else than reading an FTSO feed.`,
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
@@ -57,7 +63,7 @@ export const readFeedAction: Action = {
         _options: { [key: string]: unknown },
         callback?: HandlerCallback
     ) => {
-        console.log("Starting READ_FEED handler...");
+        elizaLogger.log("Starting READ_FEED handler...");
 
 
         // Initialize or update state

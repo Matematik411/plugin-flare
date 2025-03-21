@@ -18,19 +18,20 @@ Provide the details in the following JSON format:
     "network": "<network>"
 }
 \`\`\`
-
+    
 Example response for the transfer of 10 FLR tokens on Flare to the address 0x0123456789012345678901234567890123456789:
 \`\`\`json
 {
     "recipient": "0x0123456789012345678901234567890123456789",
-    "amount": 10,
-    "network": "Flare"
+"amount": 10,
+"network": "Flare"
 }
 \`\`\`
 
-Here are the recent user messages for context, only use the older user commands if the latest does 
-not provide all the details of the qeury:
 {{recentMessages}}
+Use only the last recent message to extract the needed information.
+If not all parameters are given, ask for them.
+Only use older messages if the uses specifically asks to read information from them.
 `;
 
 
@@ -65,9 +66,10 @@ Example response for the delegation of 100 bips on Songbird to the address 0x012
 }
 \`\`\`
 
-Here are the recent user messages for context, only use the older user commands if the latest does 
-not provide all the details of the query:
 {{recentMessages}}
+Use only the last recent message to extract the needed information.
+If not all parameters are given, ask for them.
+Only use older messages if the uses specifically asks to read information from them.
 `;
 
 export const getStatsTemplate = `
@@ -94,9 +96,10 @@ Example response for the query about the stats of flare:
 }
 \`\`\`
 
-Here are the recent user messages for context, only use the older user commands if the latest does 
-not provide all the details of the query:
 {{recentMessages}}
+Use only the last recent message to extract the needed information.
+If not all parameters are given, ask for them.
+Only use older messages if the uses specifically asks to read information from them.
 `;
 
 export const wrapTokensTemplate = `
@@ -142,9 +145,10 @@ Example response for the request for unwrapping 100 Songbird tokens:
 }
 \`\`\`
 
-Here are the recent user messages for context, only use the older user commands if the latest does 
-not provide all the details of the query:
 {{recentMessages}}
+Use only the last recent message to extract the needed information.
+If not all parameters are given, ask for them.
+Only use older messages if the uses specifically asks to read information from them.
 `;
 
 export const readFeedTemplate = `
@@ -174,9 +178,10 @@ Example response for the query for the Bitcoin feed on Flare's FTSO:
 }
 \`\`\`
 
-Here are the recent user messages for context, only use the older user commands if the latest does 
-not provide all the details of the query:
 {{recentMessages}}
+Use only the last recent message to extract the needed information.
+If not all parameters are given, ask for them.
+Only use older messages if the uses specifically asks to read information from them.
 `;
 
 export const signMessageTemplate = `
@@ -206,9 +211,10 @@ Example response for the request for signing the message "Hey, it's me!" on cost
 }
 \`\`\`
 
-Here are the recent user messages for context, only use the older user commands if the latest does 
-not provide all the details of the query:
 {{recentMessages}}
+Use only the last recent message to extract the needed information.
+If not all parameters are given, ask for them.
+Only use older messages if the uses specifically asks to read information from them.
 `;
 
 export const checkSignatureTemplate = `
@@ -245,17 +251,55 @@ for the message "Hey!" from 0x0123456789012345678901234567890123456789 on Flare:
 }
 \`\`\`
 
-Here are the recent user messages for context, only use the older user commands if the latest does 
-not provide all the details of the query:
 {{recentMessages}}
+Use only the last recent message to extract the needed information.
+If not all parameters are given, ask for them.
+Only use older messages if the uses specifically asks to read information from them.
 `;
 
-export const signTokenTransferTemplate = `
-Extract the following details for processing a request to sign a token transfer:
+export const signAuthorizationTemplate = `
+Extract the following details for processing a request for getting a signature of an
+authorized token transfer:
+- **amount** (number): The amount of tokens to be sent.
+- **recipient** (string): An address receiving the funds.
+- **nonce** (number): The number that is used as a nonce for the transfer. 
+
+Provide the details in the following JSON format:
+\`\`\`json
+{
+    "amount": <amount>,
+    "recipient": "<recipient>",
+    "nonce": <nonce>,
+}
+\`\`\`
+
+Example response for the request for signing an authorized token transfer to the address 0x1234...
+for an amount of 12 tokens. Let the nonce be 11:
+\`\`\`json
+{
+    "amount": 12,
+    "recipient": "0x1234...",
+    "nonce": 11,
+}
+\`\`\`
+
+{{recentMessages}}
+Use only the last recent message to extract the needed information.
+If not all parameters are given, ask for them.
+Only use older messages if the uses specifically asks to read information from them.
+`;
+
+export const signIntermediaryTemplate = `
+Extract the following details for processing a request for getting a signature of typed
+data for an intermediary:
 - **amount** (number): The amount of tokens to be sent.
 - **recipient** (string): An address receiving the funds.
 - **duration** (number): The length of time the signature will be valid. The given time
     is changed into duration in seconds. (e.g. "1 hour" is changed to duration=3600)
+- **nonce** (number): The number that is used as a nonce for the transfer. 
+- **fee** (string): The number that the user is paying the token transfer executioner.
+    This must be a number smaller than *amount* and is usually very small. It is saved
+    in decimal format as a string type.
 
 Provide the details in the following JSON format:
 \`\`\`json
@@ -263,20 +307,28 @@ Provide the details in the following JSON format:
     "amount": <amount>,
     "recipient": "<recipient>",
     "duration": <duration>,
+    "nonce": <nonce>,
+    "fee": "<fee>",
 }
 \`\`\`
 
-Example response for the request for signing token transfer for an amount of 100 with 
-the duration of 1 hour to the address 0x1234...:
+Example response for the request for a signature of a token transfer to the address 0x1234
+for an amount of 5 and the fee of 0.000000001. The signature has the duration of 1 hour and nonce of 42:
 \`\`\`json
 {
-    "amount": 100,
+    "amount": 5,
     "recipient": "0x1234...",
     "duration: 3600,
+    "nonce": 42,
+    "fee": "0.000000001",
 }
 \`\`\`
 
-Here are the recent user messages for context, only use the older user commands if the latest does 
-not provide all the details of the query:
 {{recentMessages}}
+Use only the last recent message to extract the needed information.
+If not all parameters are given, ask for them.
+Only use older messages if the uses specifically asks to read information from them.
 `;
+// Here are the recent user messages for context. Do not use them unless the user
+// asks to use previously given information.
+// {{recentMessages}}

@@ -50,9 +50,19 @@ export const wrapTokensAction: Action = {
         return true;
     },
     description:
-        `MUST use this action if the user requests to wrap or withdraw wrapped tokens, the request might be varied, 
-        but it will always be about token wrapping. When requested, wrap tokens without asking for further
-        confirmation from the user. DO NOT use it, if it only asks for current balance.`,
+        `MUST use this action if the user requests to wrap or withdraw (unwrap) 
+        wrapped tokens.
+        The request might be varied, but it will always be a request about 
+        exchanging wrapped and standard native tokens. 
+        Can ONLY BE USED if the user has provided the action they want to do (that
+        is wrapping or unwrapping), the amount of tokens they want to exchange
+        and the network to do it on.
+        If any of the arguments are missing, ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it.
+        DO NOT use this for anything else than exchanging wrapped and standard
+        tokens, especially if the user wants to transfer or delegate tokens.`,
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,

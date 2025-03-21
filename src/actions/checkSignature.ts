@@ -49,11 +49,17 @@ export const checkSignatureAction: Action = {
         return true;
     },
     description:
-        `MUST use this action if the user requests to check the given signature.
-        Can ONLY BE USED IF the user has to provided the signature of length 132
-        characters and the original message. The request might be varied, but it 
-        will always request a signature verification. DO NOT use it, if it only 
-        asks for current balance.`,
+        `MUST use this action if the user requests to check the given signature 
+        of a message. 
+        The request might be varied, but it will always request a signature verification. 
+        Can ONLY BE USED if the user has to provided the signature 
+        of length 132 characters, the original message and the address that signed
+        it. 
+        If any of the arguments are missing, ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it.
+        DO NOT use this for anything else than checking signatures.`,
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,

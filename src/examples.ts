@@ -63,6 +63,52 @@ export const getTransferExamples: ActionExample[][] = [
                 action: "TOKEN_TRANSFER",
             },
         }
+    ],
+    [
+        {
+            user: "{{user1}}",
+            content: { text: "Please send 10 tokens!" }
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: "I need more information about that request. Please provide a valid address and a network to make the transaction on.",
+                action: "NONE"
+            }
+        },
+        {
+            user: "{{user1}}",
+            content: { text: "Do it on Flare." }
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: "You have provided the network, please also provide the recipient address.",
+                action: "NONE"
+            }
+        },
+        {
+            user: "{{user1}}",
+            content: { text: "Send them to 0x0123456789012345678901234567890123456789." }
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: "Please confirm that you are requesting a transfer of 10 FLR to the address of 0x0123456789012345678901234567890123456789.",
+                action: "NONE"
+            }
+        },
+        {
+            user: "{{user1}}",
+            content: { text: "Yes, that is correct." }
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: "Making the transaction.",
+                action: "TOKEN_TRANSFER"
+            }
+        }
     ]
 ]
 
@@ -261,20 +307,20 @@ export const getCheckSignatureExamples: ActionExample[][] = [
     ]
 ]
 
-export const getSignTokenTransferExamples: ActionExample[][] = [
+export const getSignAuthorizationExamples: ActionExample[][] = [
     [
         {
             user: "{{user1}}",
             content: {
-                text: `Sign a token transfer to the address 0x1234... with amount 
-                of 123. Let the signature be valid for 30 minutes.`,
+                text: `Please sign an authorization for a token transfer to the address 0x1234... 
+                with amount of 123 and nonce 22.`,
             },
         },
         {
             user: "{{agent}}",
             content: {
                 text: "I'll sign the given transfer.",
-                action: "SIGN_TOKEN_TRANSFER",
+                action: "SIGN_AUTHORIZATION",
             },
         }
     ],
@@ -282,15 +328,52 @@ export const getSignTokenTransferExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: `I would like to sign a transfer with the following data: 
-                recipient=0x123..., amount=15, duration=1 hour.`,
+                text: `I would like to authorize a token transfer with a signature. Let the
+                transfer have the following properties: 
+                recipient=0x1234..., amount=15, nonce=1.`,
             },
         },
         {
             user: "{{agent}}",
             content: {
                 text: "I will do that now.",
-                action: "SIGN_TOKEN_TRANSFER",
+                action: "SIGN_AUTHORIZATION",
+            },
+        }
+    ]
+]
+export const getSignIntermediaryExamples: ActionExample[][] = [
+    [
+        {
+            user: "{{user1}}",
+            content: {
+                text: `Give me a signature for a token transfer to the address 0x1234... 
+                with amount of 123 and nonce 22. 
+                Let the signature be valid for 30 minutes and I'm paying 0.000001 of fee.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: "I'll sign the given transfer.",
+                action: "SIGN_INTERMEDIARY",
+            },
+        }
+    ],
+    [
+        {
+            user: "{{user1}}",
+            content: {
+                text: `I would like a signature for the following token transfer request for
+                through an intermediary: 
+                recipient=0x1234..., amount=15, fee=0.0000000015, duration=1 hour, nonce=1.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: "I will do that now.",
+                action: "SIGN_INTERMEDIARY",
             },
         }
     ]

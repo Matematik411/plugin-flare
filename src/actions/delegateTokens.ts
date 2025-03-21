@@ -47,10 +47,16 @@ export const delegateTokensAction: Action = {
         return true;
     },
     description:
-        `MUST use this action if the user requests to delegate tokens, 
-        the request might be varied, but it will always be a token delegation
-        on a selected chain. 
-        DO NOT use it, if it only asks for current balance.`,
+        `MUST use this action if the user requests to delegate (wrapped) tokens.
+        The request might be varied, but it will always be a token delegation
+        on a selected chain.
+        Can ONLY BE USED if the user provided the amount of bips to be delegated,
+        the recipient of the delegation and the network.
+        If any of the arguments are missing, ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it.
+        DO NOT use this for anything else than delegating tokens.`,
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,

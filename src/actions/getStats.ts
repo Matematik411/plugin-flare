@@ -38,9 +38,14 @@ export const getStatsAction: Action = {
         "STATS",
     ],
     description:
-        `Get stats of the selected network. 
+        `MUST use this action when user asks for the stats of the selected network.
         The request might be varied, but it will always ask about the stats of 
-        a network. DO NOT use it, if it only asks for current balance.`,
+        Can ONLY BE USED if the user provides the network. 
+        a network. If any of the arguments are missing, ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it.
+        DO NOT use this for anything else than getting the stats of a network.`,
     validate: async (runtime: IAgentRuntime) => {
         await validateFlareConfig(runtime);
         return true;
@@ -101,14 +106,14 @@ export const getStatsAction: Action = {
             if (callback) {
                 callback({
                     text: `Here are the stats for the ${callArguments.network} network: 
-                    - Total transactions ${statsData.total_transactions}
-                    - Total blocks ${statsData.total_blocks}
-                    - Total addresses ${statsData.total_addresses}
-                    - Total gas used ${statsData.total_gas_used}
-                    - Transactions today ${statsData.transactions_today} 
-                    - Gas used today ${statsData.gas_used_today}
-                    - Average block time ${statsData.average_block_time}
-                    - Coin price ${statsData.coin_price}`
+- Total transactions ${statsData.total_transactions}
+- Total blocks ${statsData.total_blocks}
+- Total addresses ${statsData.total_addresses}
+- Total gas used ${statsData.total_gas_used}
+- Transactions today ${statsData.transactions_today} 
+- Gas used today ${statsData.gas_used_today}
+- Average block time ${statsData.average_block_time}
+- Coin price ${statsData.coin_price}`
                 });
                 return true;
             }

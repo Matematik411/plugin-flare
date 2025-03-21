@@ -1,0 +1,295 @@
+{
+    "ABIs": {
+        "contractRegistry": [
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "_name",
+                        "type": "string"
+                    }
+                ],
+                "name": "getContractAddressByName",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ],
+        "ftso": [
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes21",
+                        "name": "_feedId",
+                        "type": "bytes21"
+                    }
+                ],
+                "name": "getFeedById",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "int8",
+                        "name": "",
+                        "type": "int8"
+                    },
+                    {
+                        "internalType": "uint64",
+                        "name": "",
+                        "type": "uint64"
+                    }
+                ],
+                "stateMutability": "payable",
+                "type": "function"
+            }
+        ],
+        "wNat": [
+            {
+                "inputs": [],
+                "name": "deposit",
+                "outputs": [],
+                "stateMutability": "payable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "amount",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "withdraw",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_to",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_bips",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "delegate",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            }
+        ],
+        "verifier": [
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "signer",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "message",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "bytes",
+                        "name": "signature",
+                        "type": "bytes"
+                    }
+                ],
+                "name": "verify",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "pure",
+                "type": "function"
+            }
+        ],
+        "intermediary": [
+            {
+                "inputs": [
+                    {
+                        "internalType": "contract IEIP3009",
+                        "name": "_token",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+            },
+            {
+                "inputs": [],
+                "name": "SPONSOR_RECEIVE_WITH_AUTHORIZATION_TYPEHASH",
+                "outputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "",
+                        "type": "bytes32"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "contractName",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "from",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "to",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "validAfter",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "validBefore",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "nonce",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "bytes",
+                        "name": "signature",
+                        "type": "bytes"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "fee",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bytes",
+                        "name": "feeSignature",
+                        "type": "bytes"
+                    }
+                ],
+                "name": "processTransfer",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "token",
+                "outputs": [
+                    {
+                        "internalType": "contract IEIP3009",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "version",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ],
+        "token": [
+            {
+                "inputs": [],
+                "name": "name",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "decimals",
+                "outputs": [
+                    {
+                        "internalType": "uint8",
+                        "name": "",
+                        "type": "uint8"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ]
+    },
+    "addresses": {
+        "Flare Mainnet": {
+            "contractRegistry": "0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019"
+        },
+        "Flare Testnet Coston2": {
+            "contractRegistry": "0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019",
+            "verifier": "0x64c68Fa45Ed8982FE44FaD6431e55bB575d54dB4",
+            "token": "0xce13911D4896200b543a61E4ae8E829E661Dd8EB"
+        },
+        "Songbird Canary-Network": {
+            "contractRegistry": "0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019"
+        },
+        "Songbird Testnet Coston": {
+            "contractRegistry": "0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019",
+            "verifier": "0x3bDe1A4e13023210981189bfBA84F33403Af5C6D",
+            "intermediary": "0x3D7b83Ed733Db2c0461f5b8372D9c3366e425D7d",
+            "token": "0xa3a02F6aE69BAf42E2b3e19bd2F6eC5a260aC093"
+        }
+    },
+    "urls": {
+        "gaslessBackend": "<your-url-page>"
+    }
+}

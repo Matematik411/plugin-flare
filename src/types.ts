@@ -11,6 +11,24 @@ export interface StatsResponse {
     gas_used_today: number;
 }
 
+export interface AuthorizationResponse {
+    id: number;
+    tx_hash: string;
+    processed: string;
+}
+
+export interface IntermediaryForm {
+    from: string;
+    to: string;
+    value: bigint;
+    validAfter: number;
+    validBefore: number;
+    nonce: string;
+    fee: bigint;
+    signature: string;
+    intermediarySignature: number;
+}
+
 export const DelegateTokensSchema = z.object({
     network: z.string(),
     delegated: z.string(),
@@ -50,8 +68,16 @@ export const CheckSignatureSchema = z.object({
     signerAddress: z.string(),
 })
 
-export const SignTokenTransferSchema = z.object({
+export const SignAuthorizationSchema = z.object({
+    amount: z.number(),
+    recipient: z.string(),
+    nonce: z.number(),
+})
+
+export const SignIntermediarySchema = z.object({
     amount: z.number(),
     recipient: z.string(),
     duration: z.number(),
+    nonce: z.number(),
+    fee: z.string(),
 })

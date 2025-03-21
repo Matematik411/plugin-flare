@@ -9,7 +9,7 @@ import {
     IAgentRuntime,
     Memory,
     ModelClass,
-    State,
+    State
 } from "@elizaos/core";
 import { Address } from "viem";
 import { validateFlareConfig } from "../environment";
@@ -48,10 +48,18 @@ export const transferAction: Action = {
         return true;
     },
     description:
-        `MUST use this action if the user requests to send or transfer tokens, 
-        the request might be varied, but it will always be a token transfer. 
-        DO NOT use it, if it only asks for current balance or if it asks about 
-        wrapped tokens.`,
+        `MUST use this action if the user requests to (directly) send or transfer 
+        tokens. 
+        The request might be varied, but it will always be a token transfer.
+        Can ONLY BE USED if the user provides the target address, the amount of 
+        tokens to be transferred and the network to do it on.
+        If any of the arguments are missing, ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it. 
+        DO NOT use this for anything else than directly transferring tokens, 
+        especially if user asks for a signature of a token transfer or if they
+        are talking about wrapped tokens.`,
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
@@ -60,7 +68,6 @@ export const transferAction: Action = {
         callback?: HandlerCallback
     ) => {
         elizaLogger.log("Starting TOKEN_TRANSFER handler...");
-
 
         // Initialize or update state
         if (!state) {
@@ -83,7 +90,7 @@ export const transferAction: Action = {
             schema: TransferSchema
         });
 
-        const callArguments = content.object;
+        const callArguments = content.object as TransferContent;
 
         // Validate transfer content
         if (!isTransferContent(callArguments)) {
@@ -98,7 +105,6 @@ export const transferAction: Action = {
         const networkService = createNetworkService(
             callArguments.network as string
         );
-
 
         try {
             const tx = await networkService.transferTokens(

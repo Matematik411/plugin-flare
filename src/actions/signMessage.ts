@@ -44,12 +44,19 @@ export const signMessageAction: Action = {
         return true;
     },
     description:
-        `MUST use this action if the user requests to sign a message. 
-        The user will provide only the message and the network.
+        `MUST use this action if the user requests to sign a text message. 
+        The request might be varied, but it will always request a signature
+        for a text message.
+        Can ONLY BE USED if the user has provided a text message to be signed 
+        and the network.
+        If any of the arguments are missing, ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it.
         If a signature of length 132 characters is already given, DO NOT use 
-        this action, the request might be varied, but it will always be a 
-        request for signing a message. 
-        DO NOT use it, if it only asks for current balance.`,
+        this action. 
+        DO NOT use this for anything else than generating a signature of a 
+        text message.`,
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
