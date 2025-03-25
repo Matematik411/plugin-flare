@@ -279,7 +279,8 @@ export const getCheckSignatureExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: `Check the signature 0x0123... for the message "Wow!" from 0x9876... on Flare.`,
+                text: `Check the signature 0x0123... for the message "Wow!" from
+                0x0123456789012345678901234567890123456789 on Flare.`,
             },
         },
         {
@@ -294,7 +295,8 @@ export const getCheckSignatureExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: `On songbird I received a message "free tokens" from address 0x9876..., verify its signature 0x0123... please.".`,
+                text: `On songbird I received a message "free tokens" from address 
+                0x0123456789012345678901234567890123456789, verify its signature 0x0123... please.".`,
             },
         },
         {
@@ -312,7 +314,8 @@ export const getSignAuthorizationExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: `Please sign an authorization for a token transfer to the address 0x1234... 
+                text: `Please sign an authorization for a token transfer to the 
+                address 0x0123456789012345678901234567890123456789 
                 with amount of 123 and nonce 22.`,
             },
         },
@@ -330,7 +333,7 @@ export const getSignAuthorizationExamples: ActionExample[][] = [
             content: {
                 text: `I would like to authorize a token transfer with a signature. Let the
                 transfer have the following properties: 
-                recipient=0x1234..., amount=15, nonce=1.`,
+                recipient=0x0123456789012345678901234567890123456789, amount=15, nonce=1.`,
             },
         },
         {
@@ -347,8 +350,8 @@ export const getSignIntermediaryExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: `Give me a signature for a token transfer to the address 0x1234... 
-                with amount of 123 and nonce 22. 
+                text: `Give me a signature for a token transfer to the address 
+                0x0123456789012345678901234567890123456789 with amount of 123 and nonce 22. 
                 Let the signature be valid for 30 minutes and I'm paying 0.000001 of fee.`,
             },
         },
@@ -366,7 +369,8 @@ export const getSignIntermediaryExamples: ActionExample[][] = [
             content: {
                 text: `I would like a signature for the following token transfer request for
                 through an intermediary: 
-                recipient=0x1234..., amount=15, fee=0.0000000015, duration=1 hour, nonce=1.`,
+                recipient=0x0123456789012345678901234567890123456789, amount=15, 
+                fee=0.0000000015, duration=1 hour, nonce=1.`,
             },
         },
         {

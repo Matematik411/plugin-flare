@@ -19,12 +19,12 @@ Provide the details in the following JSON format:
 }
 \`\`\`
     
-Example response for the transfer of 10 FLR tokens on Flare to the address 0x0123456789012345678901234567890123456789:
+Example response for the transfer of 10 FLR tokens on Flare to the address 0x01234...:
 \`\`\`json
 {
-    "recipient": "0x0123456789012345678901234567890123456789",
-"amount": 10,
-"network": "Flare"
+    "recipient": "0x01234...",
+    "amount": 10,
+    "network": "Flare"
 }
 \`\`\`
 
@@ -57,10 +57,10 @@ Provide the details in the following JSON format:
 }
 \`\`\`
 
-Example response for the delegation of 100 bips on Songbird to the address 0x0123456789012345678901234567890123456789:
+Example response for the delegation of 100 bips on Songbird to the address 0x01234...:
 \`\`\`json
 {
-    "delegated": "0x0123456789012345678901234567890123456789",
+    "delegated": "0x01234...",
     "bips": 100,
     "network": "Songbird"
 }
@@ -240,14 +240,14 @@ Provide the details in the following JSON format:
 }
 \`\`\`
 
-Example response for the request for checking the signature "0x0123..."
-for the message "Hey!" from 0x0123456789012345678901234567890123456789 on Flare:
+Example response for the request for checking the signature "0x9876..."
+for the message "Hey!" from 0x01234... on Flare:
 \`\`\`json
 {
     "network": "Flare",
     "message": "Hey!",
-    "signature": "0x0123...",
-    "signerAddress": "0x0123456789012345678901234567890123456789"
+    "signature": "0x9876...",
+    "signerAddress": "0x01234..."
 }
 \`\`\`
 
@@ -312,7 +312,7 @@ Provide the details in the following JSON format:
 }
 \`\`\`
 
-Example response for the request for a signature of a token transfer to the address 0x1234
+Example response for the request for a signature of a token transfer to the address 0x1234...
 for an amount of 5 and the fee of 0.000000001. The signature has the duration of 1 hour and nonce of 42:
 \`\`\`json
 {
@@ -329,6 +329,3 @@ Use only the last recent message to extract the needed information.
 If not all parameters are given, ask for them.
 Only use older messages if the uses specifically asks to read information from them.
 `;
-// Here are the recent user messages for context. Do not use them unless the user
-// asks to use previously given information.
-// {{recentMessages}}
