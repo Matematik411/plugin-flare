@@ -114,13 +114,13 @@ export const signMessageAction: Action = {
                 callArguments.message as string
             );
             callback?.({
-                text: `signing successful, the signature of [${callArguments.message as string}] is: 
+                text: `Signature generating successful, the signature of [${callArguments.message as string}] is: 
                 ${signature}`,
                 content: { success: true, signature: signature },
             });
         } catch (error: any) {
             callback?.({
-                text: `signing failed with error ${error}`,
+                text: `Signing failed with error ${error}`,
                 content: { error: "Signing failed" },
             });
         }

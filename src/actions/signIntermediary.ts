@@ -140,7 +140,7 @@ export const signIntermediaryAction: Action = {
             });
         } catch (error: any) {
             callback?.({
-                text: `signing failed with error ${error}`,
+                text: `Signing failed with error ${error}`,
                 content: { error: "Signing failed" },
             });
         }

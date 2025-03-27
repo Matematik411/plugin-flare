@@ -127,12 +127,13 @@ export const wrapTokensAction: Action = {
             const receipt = await getTxReceipt(runtime, callArguments.network as string, tx);
             if (receipt.status === "success") {
                 callback?.({
-                    text: `${callArguments.action} of ${callArguments.amount} on ${callArguments.network} successful, with transaction ${receipt.transactionHash}`,
+                    text: `${callArguments.action} of ${callArguments.amount} tokens on ${callArguments.network} successful, 
+                    with transaction ${receipt.transactionHash}`,
                     content: { success: true, txHash: tx },
                 });
             } else {
                 callback?.({
-                    text: "Wrapping failed",
+                    text: "Wrapping service action failed, could not wrap.",
                     content: { error: "Wrapping failed" },
                 });
             }

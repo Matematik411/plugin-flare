@@ -124,12 +124,12 @@ export const signAuthorizationAction: Action = {
             );
             if (txHash) {
                 callback?.({
-                    text: `Authorized transfer successfull with transaction hash ${txHash}.`,
+                    text: `Authorized transfer was successful with transaction hash ${txHash}.`,
                     content: { success: true, txHash: txHash }
                 })
             } else {
                 callback?.({
-                    text: `Authorization failed.`,
+                    text: `Authorization service action failed, could not authorize the payment.`,
                     content: { error: "Authorization failed" }
                 })
             }

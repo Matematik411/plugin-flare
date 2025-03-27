@@ -102,11 +102,6 @@ export const getStatsAction: Action = {
 
         try {
             const statsData = await networkService.getStats();
-            elizaLogger.success(
-                `Successfully fetched Stats`,
-                statsData,
-                'end of data'
-            );
             if (callback) {
                 callback({
                     text: `Here are the stats for the ${callArguments.network} network: 
@@ -122,7 +117,6 @@ export const getStatsAction: Action = {
                 return true;
             }
         } catch (error: any) {
-            elizaLogger.error("Error in Flare plugin handler:", error);
             callback({
                 text: `Error fetching stats: ${error.message}`,
                 content: { error: error.message },

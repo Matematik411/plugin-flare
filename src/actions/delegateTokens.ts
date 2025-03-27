@@ -118,12 +118,12 @@ export const delegateTokensAction: Action = {
             const receipt = await getTxReceipt(runtime, callArguments.network as string, tx);
             if (receipt.status === "success") {
                 callback?.({
-                    text: `delegation successful, with transaction ${receipt.transactionHash}`,
+                    text: `Delegation was successful, its transaction is: ${receipt.transactionHash}`,
                     content: { success: true, txHash: tx },
                 });
             } else {
                 callback?.({
-                    text: "Delegation failed",
+                    text: "Delegation service action failed, could not delegate.",
                     content: { error: "Delegation failed" },
                 });
             }

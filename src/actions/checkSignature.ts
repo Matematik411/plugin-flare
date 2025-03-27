@@ -137,7 +137,7 @@ export const checkSignatureAction: Action = {
             }
         } catch (error: any) {
             callback?.({
-                text: `signature verification failed with: ${error}`,
+                text: `Signature verification failed with: ${error}`,
                 content: { error: "Signature verification failed" },
             });
         }

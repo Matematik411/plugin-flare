@@ -122,12 +122,12 @@ export const transferAction: Action = {
             const receipt = await getTxReceipt(runtime, callArguments.network as string, tx);
             if (receipt.status === "success") {
                 callback?.({
-                    text: `transfer successful, with transaction ${receipt.transactionHash}`,
+                    text: `Transfer was successful, the transaction is ${receipt.transactionHash}`,
                     content: { success: true, txHash: tx },
                 });
             } else {
                 callback?.({
-                    text: "transfer failed",
+                    text: "Native transfer service action failed, could not transfer.",
                     content: { error: "Transfer failed" },
                 });
             }
