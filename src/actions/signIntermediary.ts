@@ -40,7 +40,6 @@ function isSignIntermediaryContent(
 }
 
 // Generates signatures and returns them
-// TODO: make it, so they're sent to the designated page
 export const signIntermediaryAction: Action = {
     name: "SIGN_INTERMEDIARY",
     similes: [
@@ -59,10 +58,8 @@ export const signIntermediaryAction: Action = {
         Can ONLY BE USED if the user has provided the recipient and the amount of
         tokens to be sent, the fee they will pay to the executioner, the nonce value
         of the transfer and the duration the signatures need to last.
-        If any of the arguments are missing, ask for the user to provide them.
-        Before executing the command, write out the understood parameters for the 
-        user to check them, then ALWAYS ask for permission to execute the command.
-        Only after receiving the user's approval of the parameters, execute it.
+        If any of the arguments are missing or set to "null", ask for the user to provide them.
+        The amount and fee values must be larger than zero.
         The duration is changed into seconds from any other time unit like 
         minutes, hours, days or longer.
         The fee value must be in decimal format and is in string form.
@@ -90,14 +87,22 @@ export const signIntermediaryAction: Action = {
             template: signIntermediaryTemplate,
         });
 
-        // Generate content for intermediary signature
-        const content = await generateObject({
-            runtime,
-            context: signIntermediaryContext,
-            modelClass: ModelClass.SMALL,
-            schema: SignIntermediarySchema
-        });
-
+        let content;
+        try {
+            // Generate content for intermediary signature
+            content = await generateObject({
+                runtime,
+                context: signIntermediaryContext,
+                modelClass: ModelClass.MEDIUM,
+                schema: SignIntermediarySchema
+            });
+        } catch (error: any) {
+            callback?.({
+                text: `There are missing arguments in your request.`,
+                content: { error: "Generate object failed" },
+            });
+            return false;
+        }
         const callArguments = content.object as SignIntermediaryContent;
 
         // Validate signing data content

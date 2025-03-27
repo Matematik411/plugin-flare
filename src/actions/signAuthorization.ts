@@ -36,7 +36,9 @@ function isSignAuthorizationContent(
 }
 
 // Authorizes a token transfer with a signature and sends it to the executor
-// that executes them
+// that executes the token transfer.
+// Currently a coston2 executor is set up, and this action is for a specific
+// USDT token (set it the contracts.json).
 export const signAuthorizationAction: Action = {
     name: "SIGN_AUTHORIZATION",
     similes: [
@@ -54,10 +56,8 @@ export const signAuthorizationAction: Action = {
         tranfer or its signature.
         Can ONLY BE USED if the user has provided the recipient and the amount of
         tokens to be sent, the nonce value of the transfer.
-        If any of the arguments are missing, ask for the user to provide them.
-        Before executing the command, write out the understood parameters for the 
-        user to check them, then ALWAYS ask for permission to execute the command.
-        Only after receiving the user's approval of the parameters, execute it.
+        If any of the arguments are missing or set to "null", ask for the user to provide them.
+        The amount value must be larger than zero.
         DO NOT use this for anything else than executing an authorized token
         transfer, especially if the user asks to simply transfer tokens or get
         signatures for an intermediary transfer.`,
@@ -83,14 +83,22 @@ export const signAuthorizationAction: Action = {
             template: signAuthorizationTemplate,
         });
 
-        // Generate content for an authorized transfer
-        const content = await generateObject({
-            runtime,
-            context: signAuthorizationContext,
-            modelClass: ModelClass.SMALL,
-            schema: SignAuthorizationSchema
-        });
-
+        let content;
+        try {
+            // Generate content for an authorized transfer
+            content = await generateObject({
+                runtime,
+                context: signAuthorizationContext,
+                modelClass: ModelClass.MEDIUM,
+                schema: SignAuthorizationSchema
+            });
+        } catch (error: any) {
+            callback?.({
+                text: `There are missing arguments in your request.`,
+                content: { error: "Generate object failed" },
+            });
+            return false;
+        }
         const callArguments = content.object as SignAuthorizationContent;
 
         // Validate signing data content

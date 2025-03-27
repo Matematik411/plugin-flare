@@ -9,7 +9,7 @@ import {
     IAgentRuntime,
     Memory,
     ModelClass,
-    State,
+    State
 } from "@elizaos/core";
 import { validateFlareConfig } from "../environment";
 import { getWrapTokensExamples } from "../examples";
@@ -57,10 +57,8 @@ export const wrapTokensAction: Action = {
         Can ONLY BE USED if the user has provided the action they want to do (that
         is wrapping or unwrapping), the amount of tokens they want to exchange
         and the network to do it on.
-        If any of the arguments are missing, ask for the user to provide them.
-        Before executing the command, write out the understood parameters for the 
-        user to check them, then ALWAYS ask for permission to execute the command.
-        Only after receiving the user's approval of the parameters, execute it.
+        If any of the arguments are missing or set to "null", ask for the user to provide them.
+        The amount value must be larger than zero.
         DO NOT use this for anything else than exchanging wrapped and standard
         tokens, especially if the user wants to transfer or delegate tokens.`,
     handler: async (
@@ -86,13 +84,23 @@ export const wrapTokensAction: Action = {
             template: wrapTokensTemplate,
         });
 
-        // Generate wrap content
-        const content = await generateObject({
-            runtime,
-            context: wrapFlareContext,
-            modelClass: ModelClass.SMALL,
-            schema: WrapTokensSchema,
-        });
+
+        let content;
+        try {
+            // Generate wrap content
+            content = await generateObject({
+                runtime,
+                context: wrapFlareContext,
+                modelClass: ModelClass.MEDIUM,
+                schema: WrapTokensSchema,
+            });
+        } catch (error: any) {
+            callback?.({
+                text: `There are missing arguments in your request.`,
+                content: { error: "Generate object failed" },
+            });
+            return false;
+        }
         const callArguments = content.object as WrapTokensContent;
 
         // Validate wrap content

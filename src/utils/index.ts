@@ -13,8 +13,10 @@ import { flare, flareTestnet, songbird, songbirdTestnet } from "viem/chains";
 export const networks: { [name: string]: Chain } = {
     "flare": flare,
     "coston2": flareTestnet,
+    "flaretestnetcoston2": flareTestnet,
     "songbird": songbird,
     "coston": songbirdTestnet,
+    "songbirdtestnetcoston": songbirdTestnet,
 }
 
 export const getNetwork = (chainName: string) => {

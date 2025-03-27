@@ -18,7 +18,6 @@ import { signMessageTemplate } from "../templates";
 import { SignMessageSchema } from "../types";
 
 export interface SignMessageContent extends Content {
-    network: string,
     message: string,
 }
 
@@ -27,7 +26,6 @@ function isSignMessageContent(
 ): content is SignMessageContent {
     console.log("Content for sign message", content);
     return (
-        typeof content.network === "string" &&
         typeof content.message === "string"
     );
 }
@@ -47,12 +45,8 @@ export const signMessageAction: Action = {
         `MUST use this action if the user requests to sign a text message. 
         The request might be varied, but it will always request a signature
         for a text message.
-        Can ONLY BE USED if the user has provided a text message to be signed 
-        and the network.
-        If any of the arguments are missing, ask for the user to provide them.
-        Before executing the command, write out the understood parameters for the 
-        user to check them, then ALWAYS ask for permission to execute the command.
-        Only after receiving the user's approval of the parameters, execute it.
+        Can ONLY BE USED if the user has provided a text message to be signed.
+        If any of the arguments are missing or set to "null", ask for the user to provide them.
         If a signature of length 132 characters is already given, DO NOT use 
         this action. 
         DO NOT use this for anything else than generating a signature of a 
@@ -80,13 +74,22 @@ export const signMessageAction: Action = {
             template: signMessageTemplate,
         });
 
-        // Generate signing content
-        const content = await generateObject({
-            runtime,
-            context: signMessageContext,
-            modelClass: ModelClass.SMALL,
-            schema: SignMessageSchema
-        });
+        let content;
+        try {
+            // Generate signing content
+            content = await generateObject({
+                runtime,
+                context: signMessageContext,
+                modelClass: ModelClass.MEDIUM,
+                schema: SignMessageSchema
+            });
+        } catch (error: any) {
+            callback?.({
+                text: `There are missing arguments in your request.`,
+                content: { error: "Generate object failed" },
+            });
+            return false;
+        }
 
         const callArguments = content.object;
 
@@ -100,8 +103,9 @@ export const signMessageAction: Action = {
             return false;
         }
 
+        // The chosen network isn't important here.
         const networkService = createNetworkService(
-            callArguments.network as string
+            "coston"
         )
 
         try {

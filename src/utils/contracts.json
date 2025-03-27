@@ -276,7 +276,6 @@
         },
         "Flare Testnet Coston2": {
             "contractRegistry": "0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019",
-            "verifier": "0x64c68Fa45Ed8982FE44FaD6431e55bB575d54dB4",
             "token": "0xce13911D4896200b543a61E4ae8E829E661Dd8EB"
         },
         "Songbird Canary-Network": {

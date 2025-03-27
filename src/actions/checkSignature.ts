@@ -19,7 +19,6 @@ import { checkSignatureTemplate } from "../templates";
 import { CheckSignatureSchema } from "../types";
 
 export interface CheckSignatureContent extends Content {
-    network: string;
     message: string;
     signature: string;
     signerAddress: string;
@@ -30,7 +29,6 @@ function isCheckSignatureContent(
 ): content is CheckSignatureContent {
     console.log("Content for checking the signature", content);
     return (
-        typeof content.network === "string" &&
         typeof content.message === "string" &&
         typeof content.signature === "string" &&
         typeof content.signerAddress === "string"
@@ -41,8 +39,9 @@ export const checkSignatureAction: Action = {
     name: "CHECK_SIGNATURE",
     similes: [
         "SIGNATURE_VERIFICATION",
+        "MESSAGE_SIGNATURE_VERIFICATION",
         "VERIFY_SIGNATURE",
-        "SIGNING_CHECK",
+        "MESSAGE_SIGNING_CHECK",
     ],
     validate: async (runtime: IAgentRuntime, _message: Memory) => {
         await validateFlareConfig(runtime);
@@ -55,11 +54,8 @@ export const checkSignatureAction: Action = {
         Can ONLY BE USED if the user has to provided the signature 
         of length 132 characters, the original message and the address that signed
         it. 
-        If any of the arguments are missing, ask for the user to provide them.
-        Before executing the command, write out the understood parameters for the 
-        user to check them, then ALWAYS ask for permission to execute the command.
-        Only after receiving the user's approval of the parameters, execute it.
-        DO NOT use this for anything else than checking signatures.`,
+        If any of the arguments are missing or set to "null", ask for the user to provide them.
+        DO NOT use this for anything else than checking message signatures.`,
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
@@ -83,14 +79,22 @@ export const checkSignatureAction: Action = {
             template: checkSignatureTemplate,
         });
 
-        // Generate verification content
-        const content = await generateObject({
-            runtime,
-            context: checkSignatureContext,
-            modelClass: ModelClass.SMALL,
-            schema: CheckSignatureSchema
-        });
-
+        let content;
+        try {
+            // Generate verification content
+            content = await generateObject({
+                runtime,
+                context: checkSignatureContext,
+                modelClass: ModelClass.MEDIUM,
+                schema: CheckSignatureSchema
+            });
+        } catch (error: any) {
+            callback?.({
+                text: `There are missing arguments in your request.`,
+                content: { error: "Generate object failed" },
+            });
+            return false;
+        }
         const callArguments = content.object;
 
         // Validate verification content
@@ -103,13 +107,15 @@ export const checkSignatureAction: Action = {
             return false;
         }
 
+        // Smart contract for this verification is deployed on Coston.
+        // The network doesn't matter for the signature.
         const networkService = createNetworkService(
-            callArguments.network as string
+            "coston"
         );
 
         try {
             // Check the signature on the contract
-            const isValid = await networkService.checkMessageSignature(
+            const isValid: boolean = await networkService.checkMessageSignature(
                 runtime,
                 callArguments.message as string,
                 callArguments.signature as string,
@@ -118,13 +124,17 @@ export const checkSignatureAction: Action = {
             let requestAnswer: string;
             if (isValid) {
                 requestAnswer = `The message [${callArguments.message as string}] is authentic and signed with the given signature.`;
+                callback?.({
+                    text: requestAnswer,
+                    content: { success: true, isSignatureValid: true },
+                });
             } else {
-                requestAnswer = `The signature does not match the given message [${callArguments.message as string}] and signer address.`
+                requestAnswer = `The signature does not match the given message [${callArguments.message as string}] and signer address [${callArguments.signerAddress as string}].`
+                callback?.({
+                    text: requestAnswer,
+                    content: { error: "Signature is not valid and does not match the given signer address." },
+                });
             }
-            callback?.({
-                text: requestAnswer,
-                content: { success: true, isSignatureValid: isValid },
-            });
         } catch (error: any) {
             callback?.({
                 text: `signature verification failed with: ${error}`,

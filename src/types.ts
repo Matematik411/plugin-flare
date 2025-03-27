@@ -57,12 +57,10 @@ export const WrapTokensSchema = z.object({
 });
 
 export const SignMessageSchema = z.object({
-    network: z.string(),
     message: z.string(),
 })
 
 export const CheckSignatureSchema = z.object({
-    network: z.string(),
     message: z.string(),
     signature: z.string(),
     signerAddress: z.string(),

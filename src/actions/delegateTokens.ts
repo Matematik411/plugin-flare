@@ -52,10 +52,8 @@ export const delegateTokensAction: Action = {
         on a selected chain.
         Can ONLY BE USED if the user provided the amount of bips to be delegated,
         the recipient of the delegation and the network.
-        If any of the arguments are missing, ask for the user to provide them.
-        Before executing the command, write out the understood parameters for the 
-        user to check them, then ALWAYS ask for permission to execute the command.
-        Only after receiving the user's approval of the parameters, execute it.
+        Bips value must be larger than zero.
+        If any of the arguments are missing or set to "null", ask for the user to provide them.
         DO NOT use this for anything else than delegating tokens.`,
     handler: async (
         runtime: IAgentRuntime,
@@ -79,14 +77,22 @@ export const delegateTokensAction: Action = {
             template: delegateTokensTemplate,
         });
 
-        // Generate delegation content
-        const content = await generateObject({
-            runtime,
-            context: delegateTokensContext,
-            modelClass: ModelClass.SMALL,
-            schema: DelegateTokensSchema,
-        });
-
+        let content;
+        try {
+            // Generate delegation content
+            content = await generateObject({
+                runtime,
+                context: delegateTokensContext,
+                modelClass: ModelClass.MEDIUM,
+                schema: DelegateTokensSchema,
+            });
+        } catch (error: any) {
+            callback?.({
+                text: `There are missing arguments in your request.`,
+                content: { error: "Generate object failed" },
+            });
+            return false;
+        }
         const callArguments = content.object;
 
         // Validate delegation content
@@ -102,7 +108,6 @@ export const delegateTokensAction: Action = {
         const networkService = createNetworkService(
             callArguments.network as string
         );
-
 
         try {
             const tx = await networkService.delegateTokens(

@@ -41,10 +41,7 @@ export const getStatsAction: Action = {
         `MUST use this action when user asks for the stats of the selected network.
         The request might be varied, but it will always ask about the stats of 
         Can ONLY BE USED if the user provides the network. 
-        a network. If any of the arguments are missing, ask for the user to provide them.
-        Before executing the command, write out the understood parameters for the 
-        user to check them, then ALWAYS ask for permission to execute the command.
-        Only after receiving the user's approval of the parameters, execute it.
+        If any of the arguments are missing or set to "null", ask for the user to provide them.
         DO NOT use this for anything else than getting the stats of a network.`,
     validate: async (runtime: IAgentRuntime) => {
         await validateFlareConfig(runtime);
@@ -71,13 +68,22 @@ export const getStatsAction: Action = {
             template: getStatsTemplate,
         });
 
-        // Generate reading of stats content
-        const content = await generateObject({
-            runtime,
-            context: getStatsContext,
-            modelClass: ModelClass.SMALL,
-            schema: GetStatsSchema,
-        });
+        let content;
+        try {
+            // Generate reading of stats content
+            content = await generateObject({
+                runtime,
+                context: getStatsContext,
+                modelClass: ModelClass.MEDIUM,
+                schema: GetStatsSchema,
+            });
+        } catch (error: any) {
+            callback?.({
+                text: `There are missing arguments in your request.`,
+                content: { error: "Generate object failed" },
+            });
+            return false;
+        }
         const callArguments = content.object;
 
         // Validate reading of a feed content
@@ -89,8 +95,6 @@ export const getStatsAction: Action = {
             });
             return false;
         }
-
-
 
         const networkService = createNetworkService(
             callArguments.network as string

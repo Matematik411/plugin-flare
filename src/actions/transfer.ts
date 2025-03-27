@@ -37,11 +37,12 @@ function isTransferContent(
 }
 
 export const transferAction: Action = {
-    name: "TOKEN_TRANSFER",
+    name: "NATIVE_TRANSFER",
     similes: [
-        "TRANSFER_TOKEN",
-        "TRANSFER",
-        "SEND_TOKEN",
+        "TRANSFER_NATIVE_TOKEN",
+        "DIRECT_TRANSFER",
+        "DIRECT_SEND",
+        "TRANSFER"
     ],
     validate: async (runtime: IAgentRuntime, _message: Memory) => {
         await validateFlareConfig(runtime);
@@ -53,10 +54,8 @@ export const transferAction: Action = {
         The request might be varied, but it will always be a token transfer.
         Can ONLY BE USED if the user provides the target address, the amount of 
         tokens to be transferred and the network to do it on.
-        If any of the arguments are missing, ask for the user to provide them.
-        Before executing the command, write out the understood parameters for the 
-        user to check them, then ALWAYS ask for permission to execute the command.
-        Only after receiving the user's approval of the parameters, execute it. 
+        If any of the arguments are missing or set to "null", ask for the user to provide them.
+        The amount value must be larger than zero.
         DO NOT use this for anything else than directly transferring tokens, 
         especially if user asks for a signature of a token transfer or if they
         are talking about wrapped tokens.`,
@@ -67,7 +66,7 @@ export const transferAction: Action = {
         _options: { [key: string]: unknown },
         callback?: HandlerCallback
     ) => {
-        elizaLogger.log("Starting TOKEN_TRANSFER handler...");
+        elizaLogger.log("Starting NATIVE_TRANSFER handler...");
 
         // Initialize or update state
         if (!state) {
@@ -82,19 +81,27 @@ export const transferAction: Action = {
             template: transferTemplate,
         });
 
-        // Generate transfer content
-        const content = await generateObject({
-            runtime,
-            context: transferContext,
-            modelClass: ModelClass.SMALL,
-            schema: TransferSchema
-        });
-
-        const callArguments = content.object as TransferContent;
+        let content;
+        try {
+            // Generate transfer content
+            content = await generateObject({
+                runtime,
+                context: transferContext,
+                modelClass: ModelClass.MEDIUM,
+                schema: TransferSchema
+            });
+        } catch (error: any) {
+            callback?.({
+                text: `There are missing arguments in your request.`,
+                content: { error: "Generate object failed" },
+            });
+            return false;
+        }
+        const callArguments = content.object;
 
         // Validate transfer content
         if (!isTransferContent(callArguments)) {
-            elizaLogger.error("Invalid content for TOKEN_TRANSFER action.");
+            elizaLogger.error("Invalid content for NATIVE_TRANSFER action.");
             callback?.({
                 text: "Unable to process transfer request. Invalid content provided.",
                 content: { error: "Invalid transfer content" },

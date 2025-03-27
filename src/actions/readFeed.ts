@@ -33,13 +33,11 @@ function isReadFeedContent(
     );
 }
 
-
-
 export const readFeedAction: Action = {
     name: "READ_FEED",
     similes: [
         "READ_FEEDS",
-        "FTSO_FEED"
+        "FTSO_FEED",
     ],
     validate: async (runtime: IAgentRuntime, _message: Memory) => {
         await validateFlareConfig(runtime);
@@ -51,10 +49,7 @@ export const readFeedAction: Action = {
         The action reads the feed off the given network's FtsoV2 contract.
         Can ONLY BE USED if the user provides the name of the feed and the name
         of the network, on which we read the FTSO.
-        If any of the arguments are missing, ask for the user to provide them.
-        Before executing the command, write out the understood parameters for the 
-        user to check them, then ALWAYS ask for permission to execute the command.
-        Only after receiving the user's approval of the parameters, execute it. 
+        If any of the arguments are missing or set to "null", ask for the user to provide them.
         DO NOT use this for anything else than reading an FTSO feed.`,
     handler: async (
         runtime: IAgentRuntime,
@@ -79,13 +74,22 @@ export const readFeedAction: Action = {
             template: readFeedTemplate,
         });
 
-        // Generate reading of a feed content
-        const content = await generateObject({
-            runtime,
-            context: readFeedContext,
-            modelClass: ModelClass.SMALL,
-            schema: ReadFeedSchema,
-        });
+        let content;
+        try {
+            // Generate reading of a feed content
+            content = await generateObject({
+                runtime,
+                context: readFeedContext,
+                modelClass: ModelClass.MEDIUM,
+                schema: ReadFeedSchema,
+            });
+        } catch (error: any) {
+            callback?.({
+                text: `There are missing arguments in your request.`,
+                content: { error: "Generate object failed" },
+            });
+            return false;
+        }
         const callArguments = content.object;
 
         // Validate reading of a feed content

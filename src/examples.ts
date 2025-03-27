@@ -20,13 +20,26 @@ export const getNetworkStatsExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: "Can you tell me the stats of the coston network?",
+                text: "Can you tell me the stats of the network?",
             },
         },
         {
             user: "{{agent}}",
             content: {
-                text: "Yes, these are the stats.",
+                text: "Sure thing. Which of the networks are you interested in?",
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: "Coston",
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: "Here are the stats.",
                 action: "GET_NETWORK_STATS",
             },
         }
@@ -38,30 +51,15 @@ export const getTransferExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: "Send 10 CFLR2 to the address 0x0123456789012345678901234567890123456789",
-            },
-        },
-        {
-            user: "{{agent}}",
-            content: {
-                text: "Sending the C2FLR.",
-                action: "TOKEN_TRANSFER",
-            },
-        }
-    ],
-    [
-        {
-            user: "{{user1}}",
-            content: {
                 text: "Send 0.123 of coston2 to the address 0x0123456789012345678901234567890123456789",
             },
         },
         {
             user: "{{agent}}",
             content: {
-                text: "I am now sending the coston2.",
-                action: "TOKEN_TRANSFER",
-            },
+                text: "Making a transaction now.",
+                action: "NATIVE_TRANSFER"
+            }
         }
     ],
     [
@@ -94,19 +92,8 @@ export const getTransferExamples: ActionExample[][] = [
         {
             user: "{{agent}}",
             content: {
-                text: "Please confirm that you are requesting a transfer of 10 FLR to the address of 0x0123456789012345678901234567890123456789.",
-                action: "NONE"
-            }
-        },
-        {
-            user: "{{user1}}",
-            content: { text: "Yes, that is correct." }
-        },
-        {
-            user: "{{agent}}",
-            content: {
                 text: "Making the transaction.",
-                action: "TOKEN_TRANSFER"
+                action: "NATIVE_TRANSFER"
             }
         }
     ]
@@ -132,16 +119,30 @@ export const getReadFeedExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: "Tell me the FLR feed value on Songbird FTSO.",
+                text: "Tell me the FLR feed value.",
             },
         },
         {
             user: "{{agent}}",
             content: {
-                text: "The value of the FLR feed is the following.",
+                text: `Yes I will, please tell me on which network's FTSO do 
+                you want me to read it.`,
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: "Use Songbird's FTSO.",
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: "The value of the Flare feed is the following.",
                 action: "READ_FEED",
             },
-        }
+        },
     ]
 ]
 
@@ -165,13 +166,27 @@ export const getWrapTokensExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: "Wrap 0.123 of my songbird tokens.",
+                text: "Wrap 0.123 of my tokens.",
             },
         },
         {
             user: "{{agent}}",
             content: {
-                text: "I will wrap the requested amount of tokens.",
+                text: `I can wrap the requested tokens, after you tell on 
+                which networks do you want to wrap them.`,
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: "On songbird.",
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: "I will now wrap the requested amount of tokens.",
                 action: "WRAP_TOKENS",
             },
         }
@@ -180,7 +195,7 @@ export const getWrapTokensExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: "Withdraw 1000 of my Songbird tokens.",
+                text: "Withdraw 1000 of my wrapped Songbird tokens.",
             },
         },
         {
@@ -195,7 +210,20 @@ export const getWrapTokensExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: "Unwrap 200 CFLR on the coston network.",
+                text: "Unwrap 200 of my tokens.",
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: "On which network?",
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: "Unwrap 200 of my CFLR tokens on coston network.",
             },
         },
         {
@@ -204,7 +232,7 @@ export const getWrapTokensExamples: ActionExample[][] = [
                 text: "I will unwrap the requested tokens.",
                 action: "WRAP_TOKENS",
             },
-        }
+        },
     ]
 ]
 
@@ -228,7 +256,22 @@ export const getDelegateTokensExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: "On songbird, I want to delegate to 0x0123456789012345678901234567890123456789, 2500 bips of value.",
+                text: `I want to delegate my wrapped tokens to the address
+                0x0123456789012345678901234567890123456789, 2500 bips of value.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `I can do that for you. Please provide the network you want
+                to do the delegating on.`,
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: `Do it on songbird.`,
             },
         },
         {
@@ -237,7 +280,7 @@ export const getDelegateTokensExamples: ActionExample[][] = [
                 text: "I will wrap the requested amount of tokens.",
                 action: "DELEGATE_TOKENS",
             },
-        }
+        },
     ]
 ]
 
@@ -246,31 +289,59 @@ export const getSignMessageExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: `Sign the message "This message." on Flare.`,
+                text: `Sign the message "This message.".`,
             },
         },
+        // {
+        //     user: "{{agent}}",
+        //     content: {
+        //         text: `Please confirm that you are requesting the signature 
+        //         for the message of "This message.".`,
+        //         action: "NONE",
+        //     },
+        // },
+        // {
+        //     user: "{{user1}}",
+        //     content: {
+        //         text: `That's correct.`,
+        //     },
+        // },
         {
             user: "{{agent}}",
             content: {
-                text: "Giving you the signature for that message.",
+                text: "Giving you the signature for it.",
                 action: "SIGN_MESSAGE",
             },
-        }
+        },
     ],
     [
         {
             user: "{{user1}}",
             content: {
-                text: "On songbird, sign the message: I did this",
+                text: "Give me the Ethereum signature of the message: I did this",
             },
         },
+        // {
+        //     user: "{{agent}}",
+        //     content: {
+        //         text: `You're requesting a signature of the message: "I did this".
+        //         Please confirm this.`,
+        //         action: "NONE",
+        //     },
+        // },
+        // {
+        //     user: "{{user1}}",
+        //     content: {
+        //         text: "I confirm the request is correct.",
+        //     },
+        // },
         {
             user: "{{agent}}",
             content: {
                 text: "I will sign the given message.",
                 action: "SIGN_MESSAGE",
             },
-        }
+        },
     ]
 ]
 
@@ -280,53 +351,51 @@ export const getCheckSignatureExamples: ActionExample[][] = [
             user: "{{user1}}",
             content: {
                 text: `Check the signature 0x0123... for the message "Wow!" from
-                0x0123456789012345678901234567890123456789 on Flare.`,
+                0x0123456789012345678901234567890123456789.`,
             },
         },
         {
             user: "{{agent}}",
             content: {
-                text: "I'll check the validity of the message for you.",
+                text: "I'll check the validity of the message for you now.",
                 action: "CHECK_SIGNATURE",
             },
-        }
+        },
     ],
     [
         {
             user: "{{user1}}",
             content: {
-                text: `On songbird I received a message "free tokens" from address 
-                0x0123456789012345678901234567890123456789, verify its signature 0x0123... please.".`,
+                text: `I received a message "free tokens" and its signature 0x0123... 
+                Please verify the signature.".`,
             },
         },
         {
             user: "{{agent}}",
             content: {
-                text: "I am checking the signature now.",
+                text: `Sure thing. I'm just going to need the address that claims
+                to have signed the message.`,
+                action: "NONE",
+            }
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: `Of course, the sender's address is 
+                "0x0123456789012345678901234567890123456789".`
+            }
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: "Great, I am checking the signature now.",
                 action: "CHECK_SIGNATURE",
             },
-        }
+        },
     ]
 ]
 
 export const getSignAuthorizationExamples: ActionExample[][] = [
-    [
-        {
-            user: "{{user1}}",
-            content: {
-                text: `Please sign an authorization for a token transfer to the 
-                address 0x0123456789012345678901234567890123456789 
-                with amount of 123 and nonce 22.`,
-            },
-        },
-        {
-            user: "{{agent}}",
-            content: {
-                text: "I'll sign the given transfer.",
-                action: "SIGN_AUTHORIZATION",
-            },
-        }
-    ],
     [
         {
             user: "{{user1}}",
@@ -343,26 +412,41 @@ export const getSignAuthorizationExamples: ActionExample[][] = [
                 action: "SIGN_AUTHORIZATION",
             },
         }
-    ]
-]
-export const getSignIntermediaryExamples: ActionExample[][] = [
+    ],
     [
         {
             user: "{{user1}}",
             content: {
-                text: `Give me a signature for a token transfer to the address 
-                0x0123456789012345678901234567890123456789 with amount of 123 and nonce 22. 
-                Let the signature be valid for 30 minutes and I'm paying 0.000001 of fee.`,
+                text: `Please sign an authorization for a token transfer to the 
+                address 0x0123456789012345678901234567890123456789 
+                with the amount of 123.`,
             },
         },
         {
             user: "{{agent}}",
             content: {
-                text: "I'll sign the given transfer.",
-                action: "SIGN_INTERMEDIARY",
+                text: `I can do that, but you first need to tell me the nonce
+                you want to use for the authorized transfer.`,
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: `Of course, I forgot to write it. Let the nonce be 11.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: "I'll sign the given transfer now.",
+                action: "SIGN_AUTHORIZATION",
             },
         }
     ],
+]
+
+export const getSignIntermediaryExamples: ActionExample[][] = [
     [
         {
             user: "{{user1}}",
@@ -379,6 +463,38 @@ export const getSignIntermediaryExamples: ActionExample[][] = [
                 text: "I will do that now.",
                 action: "SIGN_INTERMEDIARY",
             },
-        }
-    ]
+        },
+    ],
+    [
+        {
+            user: "{{user1}}",
+            content: {
+                text: `Give me a signature for a token transfer to the address 
+                0x0123456789012345678901234567890123456789 with amount of 123 and nonce 22.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `To generate the signatures I still need the fee you'd like
+                to pay to the intermediary and the duration of the signatures'
+                validity.`,
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: `Yes of course, let the signatures be valid for 1 day. 
+                The fee for the intermediary is 0.000000000001`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `Thank you. I will generate the signatures for you now.`,
+                action: "SIGN_INTERMEDIARY",
+            },
+        },
+    ],
 ]
