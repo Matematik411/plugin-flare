@@ -56,8 +56,8 @@ export const signIntermediaryAction: Action = {
         The request might be varied, but it will always ask for signatures of an 
         authorized token transfer.
         Can ONLY BE USED if the user has provided the recipient and the amount of
-        tokens to be sent, the fee they will pay to the executioner, the nonce value
-        of the transfer and the duration the signatures need to last.
+        tokens to be sent, the fee they will pay to the executor, the nonce value
+        of the transfer and the validity duration of the signatures.
         If any of the arguments are missing or set to "null", ask for the user to provide them.
         The amount and fee values must be larger than zero.
         The duration is changed into seconds from any other time unit like 

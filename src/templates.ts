@@ -7,7 +7,7 @@ for any values that cannot be determined. DO NOT use values from already complet
 actions UNLESS the user specifically asks to read them.
 - **recipient** (string): An address receiving the funds. This is an Ethereum address
     that starts with "0x" and has the length of 42.
-- **amount** (number): The amount to transfer.
+- **amount** (number): The amount to transfer. This has to be larger than 0.
 - **network** (string): The blockchain network to use. Receive it from the user
     or deduce it from the currency symbol (FLR is flare, C2FLR is coston2, SGB is
     songbird and CFLR is coston). Allowed values are:
@@ -46,7 +46,7 @@ for any values that cannot be determined. DO NOT use values from already complet
 actions UNLESS the user specifically asks to read them.
 - **delegated** (string): An address receiving the delegation. This is an Ethereum
     address that starts with "0x" and has the length of 42.
-- **bips** (number): The amount of bips to delegate.
+- **bips** (number): The amount of bips to delegate. This has to be larger than 0.
 - **network** (string): The blockchain network to use. Receive it from the user
     or deduce it from the currency symbol (FLR is flare, C2FLR is coston2, SGB is
     songbird and CFLR is coston). Allowed values are:
@@ -115,7 +115,7 @@ a request for wrapping tokens or withdrawing wrapped tokens.
 Do not take example values, they are required to be given from the user, use null 
 for any values that cannot be determined. DO NOT use values from already completed 
 actions UNLESS the user specifically asks to read them.
-- **amount** (number): The amount of tokens to wrap.
+- **amount** (number): The amount of tokens to wrap. This has to be larger than 0.
 - **action** (string): The action for tokens to be done. Allowed values are:
     static actions: {
         readonly wrap: "wrap";
@@ -260,7 +260,7 @@ a request for getting a signature of an authorized token transfer
 Do not take example values, they are required to be given from the user, use null 
 for any values that cannot be determined. DO NOT use values from already completed 
 actions UNLESS the user specifically asks to read them.
-- **amount** (number): The amount of tokens to be sent.
+- **amount** (number): The amount of tokens to be sent. This has to be larger than 0.
 - **recipient** (string): An address receiving the funds. This is an Ethereum address
     that starts with "0x" and has the length of 42.
 - **nonce** (number): The number that is used as a nonce for the transfer. 
@@ -293,15 +293,15 @@ a request for getting a signature for an intermediary of a token transfer.
 Do not take example values, they are required to be given from the user, use null 
 for any values that cannot be determined. DO NOT use values from already completed 
 actions UNLESS the user specifically asks to read them.
-- **amount** (number): The amount of tokens to be sent.
+- **amount** (number): The amount of tokens to be sent. This has to be larger than 0.
 - **recipient** (string): An address receiving the funds. This is an Ethereum address
     that starts with "0x" and has the length of 42.
 - **duration** (number): The length of time the signature will be valid. The given time
     is changed into duration in seconds. (e.g. "1 hour" is changed to duration=3600)
 - **nonce** (number): The number that is used as a nonce for the transfer. 
-- **fee** (string): The number that the user is paying the token transfer executioner.
+- **fee** (string): The number that the user is paying the token transfer executor.
     This must be a number smaller than *amount* and is usually very small. It is saved
-    in decimal format as a string type.
+    in decimal format as a string type. This has to be larger than 0.
 
 Provide the details in the following JSON format:
 \`\`\`json

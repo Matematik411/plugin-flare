@@ -69,9 +69,9 @@ export const createNetworkService = (chainName: string) => {
 
     // Returns stats of the network from the explorer's API
     const getStats = async (): Promise<StatsResponse> => {
+        // Set url and fetch data from it
+        const url = selectedChain.blockExplorers.default.apiUrl + "/v2/stats"
         try {
-            // Set url and fetch data from it
-            const url = selectedChain.blockExplorers.default.apiUrl + "/v2/stats"
             const response = await fetch(url);
 
             if (!response.ok) {
@@ -81,7 +81,7 @@ export const createNetworkService = (chainName: string) => {
             const data = await response.json();
             return data;
         } catch (error: any) {
-            console.error("Flare API Error (fetching stats):", error.message);
+            console.error(`[STATS] Flare API Error: ${error.message}`);
             throw error;
         }
     }
@@ -96,16 +96,23 @@ export const createNetworkService = (chainName: string) => {
         const decimals = await getDecimals(
             selectedChain
         );
-        const tx = await walletClient.sendTransaction({
-            account: getAccount(runtime),
-            to: recipient,
-            value: parseUnits(amount.toString(), decimals)
-        } as any);
-        return tx as Hash;
+
+        try {
+            const tx = await walletClient.sendTransaction({
+                account: getAccount(runtime),
+                to: recipient,
+                value: parseUnits(amount.toString(), decimals)
+            } as any);
+            return tx as Hash;
+        } catch (error: any) {
+            console.log(`[TRANSFER] Error transferring tokens: ${error.message}`);
+            return;
+        }
     }
 
     // Returns the string id for the requested feed on the ftso
     const getFeedId = (category: string, feedName: string): string => {
+        // Constructs the feed id
         const hexFeedName = Array.from(feedName)
             .map((c: string) => c.charCodeAt(0).toString(16).padStart(2, "0"))
             .join("");
@@ -121,14 +128,20 @@ export const createNetworkService = (chainName: string) => {
         const publicClient = getPublicClient(runtime, selectedChain);
         const ftsoAddress = await getContractAddress(runtime, "contractRegistry", "FtsoV2");
         const feedId = "0x" + getFeedId("01", `${feed}/USD`);
-        const feedValue = await publicClient.readContract({
-            account: getAccount(runtime),
-            address: ftsoAddress,
-            abi: contractABIs["ftso"],
-            functionName: "getFeedById",
-            args: [feedId]
-        }) as any;
-        return feedValue as number;
+
+        try {
+            const feedValue = await publicClient.readContract({
+                account: getAccount(runtime),
+                address: ftsoAddress,
+                abi: contractABIs["ftso"],
+                functionName: "getFeedById",
+                args: [feedId]
+            }) as any;
+            return feedValue as number;
+        } catch (error: any) {
+            console.log(`[READ FEED] Error in reading the ftso feed: ${error.message}`);
+            return
+        }
     }
 
     // Wraps or unwraps the requested tokens and returns the hash of the transaction
@@ -140,23 +153,22 @@ export const createNetworkService = (chainName: string) => {
         const publicClient = getPublicClient(runtime, selectedChain);
         const wNatAddress = await getContractAddress(runtime, "contractRegistry", "WNat");
 
-
         let functionName: string;
         let sentValue: number;
         let functionArgs: any[];
 
-        try {
-            if (action == "wrap") {
-                functionName = "deposit";
-                sentValue = amount;
-                functionArgs = [];
-            } else {
-                const decimals = await getDecimals(selectedChain);
-                functionName = "withdraw";
-                sentValue = 0;
-                functionArgs = [parseUnits(amount.toString(), decimals)]
-            };
+        if (action == "wrap") {
+            functionName = "deposit";
+            sentValue = amount;
+            functionArgs = [];
+        } else {
+            const decimals = await getDecimals(selectedChain);
+            functionName = "withdraw";
+            sentValue = 0;
+            functionArgs = [parseUnits(amount.toString(), decimals)]
+        };
 
+        try {
             const { result, request } = await publicClient.simulateContract({
                 account: getAccount(runtime),
                 address: wNatAddress,
@@ -171,8 +183,8 @@ export const createNetworkService = (chainName: string) => {
             const tx = await walletClient.writeContract(request);
             return tx as Hash
 
-        } catch (error) {
-            console.log(`[WRAP] Error simulating the contract: ${error}`);
+        } catch (error: any) {
+            console.log(`[WRAP] Error simulating the contract: ${error.message}`);
             return;
         }
 
@@ -202,8 +214,8 @@ export const createNetworkService = (chainName: string) => {
             const tx = await walletClient.writeContract(request);
             return tx as Hash
 
-        } catch (error) {
-            console.log(`[DELEGATE] Error simulating the contract: ${error}`);
+        } catch (error: any) {
+            console.log(`[DELEGATE] Error simulating the contract: ${error.message}`);
             return;
         }
 
@@ -214,19 +226,18 @@ export const createNetworkService = (chainName: string) => {
         runtime: IAgentRuntime,
         message: string,
     ): Promise<string> => {
+        // hash and sign the message (double keccak is used)
+        const walletClient = getWalletClient(runtime, selectedChain);
+        const messageHash = keccak256(toBytes(message));
 
         try {
-            // hash and sign the message (double keccak is used)
-            const walletClient = getWalletClient(runtime, selectedChain);
-            const messageHash = keccak256(toBytes(message));
             const signature = await walletClient.signMessage({
                 account: getAccount(runtime),
                 message: { raw: messageHash },
             });
-
             return signature;
-        } catch (error) {
-            console.log(`[SIGN MESSAGE] Error constructing the signature: ${error}`);
+        } catch (error: any) {
+            console.log(`[SIGN MESSAGE] Error constructing the signature: ${error.message}`);
             return;
         }
     }
@@ -238,9 +249,10 @@ export const createNetworkService = (chainName: string) => {
         signature: string,
         signerAddress: string,
     ): Promise<boolean> => {
+        const publicClient = getPublicClient(runtime, selectedChain);
+        const verifierAddress = await getContractAddress(runtime, "verifier");
+
         try {
-            const publicClient = getPublicClient(runtime, selectedChain);
-            const verifierAddress = await getContractAddress(runtime, "verifier");
             const isValid = await publicClient.readContract({
                 account: getAccount(runtime),
                 address: verifierAddress,
@@ -253,9 +265,8 @@ export const createNetworkService = (chainName: string) => {
                 ]
             }) as any;
             return isValid as boolean;
-
-        } catch (error) {
-            console.log(`[CHECK SIGNATURE] Error reading the contract: ${error}`);
+        } catch (error: any) {
+            console.log(`[CHECK SIGNATURE] Error reading the contract: ${error.message}`);
             return;
         }
 
@@ -268,12 +279,24 @@ export const createNetworkService = (chainName: string) => {
         recipient: Address,
         nonce: number,
     ): Promise<Hash> => {
-        try {
-            const publicClient = getPublicClient(runtime, selectedChain);
-            const walletClient = getWalletClient(runtime, selectedChain);
+        const publicClient = getPublicClient(runtime, selectedChain);
+        const walletClient = getWalletClient(runtime, selectedChain);
 
-            // Get token address 
-            const tokenAddress = await getContractAddress(runtime, "token");
+        // Get token address 
+        const tokenAddress = await getContractAddress(runtime, "token");
+
+        const types = {
+            TransferWithAuthorization: [
+                { name: "from", type: "address" },
+                { name: "to", type: "address" },
+                { name: "value", type: "uint256" },
+                { name: "validAfter", type: "uint256" },
+                { name: "validBefore", type: "uint256" },
+                { name: "nonce", type: "bytes32" },
+            ],
+        };
+
+        try {
             // Get decimals and name of the token
             const tokenName: string = await publicClient.readContract({
                 account: getAccount(runtime),
@@ -289,17 +312,6 @@ export const createNetworkService = (chainName: string) => {
                 functionName: "decimals",
                 args: []
             }) as any as number
-
-            const types = {
-                TransferWithAuthorization: [
-                    { name: "from", type: "address" },
-                    { name: "to", type: "address" },
-                    { name: "value", type: "uint256" },
-                    { name: "validAfter", type: "uint256" },
-                    { name: "validBefore", type: "uint256" },
-                    { name: "nonce", type: "bytes32" },
-                ],
-            };
 
             // Get token transfer signature
             const domain = {
@@ -354,8 +366,8 @@ export const createNetworkService = (chainName: string) => {
                 return responseCheck.tx_hash as Hash
             }
 
-        } catch (error) {
-            console.log(`[SIGN AUTHORIZATION] Error constructing the signature: ${error}`);
+        } catch (error: any) {
+            console.log(`[SIGN AUTHORIZATION] Error constructing the signature: ${error.message}`);
             return;
         }
 
@@ -370,14 +382,34 @@ export const createNetworkService = (chainName: string) => {
         nonce: number,
         fee: string
     ): Promise<IntermediaryForm> => {
-        try {
-            const publicClient = getPublicClient(runtime, selectedChain);
-            const walletClient = getWalletClient(runtime, selectedChain);
-            const decimals = await getDecimals(selectedChain);
-            // This contains both intermediary and token addresses
-            const intermediaryAddress = await getContractAddress(runtime, "intermediary");
-            const tokenAddress = await getContractAddress(runtime, "token");
+        const publicClient = getPublicClient(runtime, selectedChain);
+        const walletClient = getWalletClient(runtime, selectedChain);
+        const decimals = await getDecimals(selectedChain);
+        // This contains both intermediary and token addresses
+        const intermediaryAddress = await getContractAddress(runtime, "intermediary");
+        const tokenAddress = await getContractAddress(runtime, "token");
 
+        const types = {
+            SponsorReceiveWithAuthorization: [
+                { name: "from", type: "address" },
+                { name: "to", type: "address" },
+                { name: "value", type: "uint256" },
+                { name: "validAfter", type: "uint256" },
+                { name: "validBefore", type: "uint256" },
+                { name: "nonce", type: "bytes32" },
+                { name: "fee", type: "uint256" },
+            ],
+            ReceiveWithAuthorization: [
+                { name: "from", type: "address" },
+                { name: "to", type: "address" },
+                { name: "value", type: "uint256" },
+                { name: "validAfter", type: "uint256" },
+                { name: "validBefore", type: "uint256" },
+                { name: "nonce", type: "bytes32" },
+            ],
+        };
+
+        try {
             // intermediary's name contains the tokens name, e.g. TransferIntermediary-MyToken
             const intermediaryName: string = await publicClient.readContract({
                 account: getAccount(runtime),
@@ -388,26 +420,6 @@ export const createNetworkService = (chainName: string) => {
             }) as any as string
             const tokenName = intermediaryName.split("-").slice(1).join("-")
             const latestTimestamp = Math.floor(Date.now() / 1000) + duration;
-
-            const types = {
-                SponsorReceiveWithAuthorization: [
-                    { name: "from", type: "address" },
-                    { name: "to", type: "address" },
-                    { name: "value", type: "uint256" },
-                    { name: "validAfter", type: "uint256" },
-                    { name: "validBefore", type: "uint256" },
-                    { name: "nonce", type: "bytes32" },
-                    { name: "fee", type: "uint256" },
-                ],
-                ReceiveWithAuthorization: [
-                    { name: "from", type: "address" },
-                    { name: "to", type: "address" },
-                    { name: "value", type: "uint256" },
-                    { name: "validAfter", type: "uint256" },
-                    { name: "validBefore", type: "uint256" },
-                    { name: "nonce", type: "bytes32" },
-                ],
-            };
 
             // Get token transfer signature
             const domain = {
@@ -460,9 +472,8 @@ export const createNetworkService = (chainName: string) => {
                 ...valuesSponsor, signature, intermediarySignature
             };
             return constructedData;
-
-        } catch (error) {
-            console.log(`[SIGN INTERMEDIARY] Error constructing the signature: ${error}`);
+        } catch (error: any) {
+            console.log(`[SIGN INTERMEDIARY] Error constructing the signature: ${error.message}`);
             return;
         }
 
