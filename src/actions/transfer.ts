@@ -58,6 +58,8 @@ export const transferAction: Action = {
         Before executing the command, write out the understood parameters for the 
         user to check them, then ALWAYS ask for permission to execute the command.
         Only after receiving the user's approval of the parameters, execute it.
+        If the user disagrees with the parameters, do not execute the action and
+        dismiss the request for it.
         The amount value must be larger than zero.
         DO NOT use this for anything else than directly transferring tokens, 
         especially if user asks for a signature of a token transfer or if they

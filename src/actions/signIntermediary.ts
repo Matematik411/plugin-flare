@@ -62,6 +62,8 @@ export const signIntermediaryAction: Action = {
         Before executing the command, write out the understood parameters for the 
         user to check them, then ALWAYS ask for permission to execute the command.
         Only after receiving the user's approval of the parameters, execute it.
+        If the user disagrees with the parameters, do not execute the action and
+        dismiss the request for it.
         The amount and fee values must be larger than zero.
         The duration is changed into seconds from any other time unit like 
         minutes, hours, days or longer.

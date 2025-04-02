@@ -50,6 +50,8 @@ export const signMessageAction: Action = {
         Before executing the command, write out the understood parameters for the 
         user to check them, then ALWAYS ask for permission to execute the command.
         Only after receiving the user's approval of the parameters, execute it.
+        If the user disagrees with the parameters, do not execute the action and
+        dismiss the request for it.
         If a signature of length 132 characters is already given, DO NOT use 
         this action. 
         This action does not require a network argument, as the Ethereum signature

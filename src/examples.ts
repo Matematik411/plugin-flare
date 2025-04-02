@@ -33,6 +33,34 @@ export const getNetworkStatsExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
+                text: `Show me the stats for Songbird network`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `Please confirm you want to see the network stats for Coston network.`,
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: `No, I asked for Songbird network stats, not coston.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `I apologize for the mistake. I will not execute this request and am canceling it.`,
+                action: "NONE",
+            },
+        },
+    ],
+    [
+        {
+            user: "{{user1}}",
+            content: {
                 text: `Tell me the stats of coston2 network`,
             },
         },
@@ -164,6 +192,37 @@ export const getTransferExamples: ActionExample[][] = [
     [
         {
             user: "{{user1}}",
+            content: {
+                text: `I want you to make a native transfer of 144 C2FLR to the address 
+                0x0123456789012345678901234567890123456789 please.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `I require your confirmation of transaction details, before doing it. Please confirm, that the
+                following values were understood correctly. You wish to send 144 tokens on the coston network (Songbird
+                testnet) to the address of 0x0123...6789.`,
+                action: "NONE"
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: `You understood the network wrong. The values are not correct. `,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `I apologize for the mistake. I will not execute the action and am removing the last request.`,
+                action: "NATIVE_TRANSFER"
+            },
+        },
+    ],
+    [
+        {
+            user: "{{user1}}",
             content: { text: `Please send 10 native tokens!` },
         },
         {
@@ -272,6 +331,34 @@ export const getReadFeedExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
+                text: `What's the current price feed for XRP on Flare?`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `Please confirm you want to read the XRP feed value from Coston2 network's FTSO.`,
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: `No, I asked you to read it on Flare, not Coston2.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `I misunderstood your request. I will cancel this feed read operation.`,
+                action: "NONE",
+            },
+        },
+    ],
+    [
+        {
+            user: "{{user1}}",
+            content: {
                 text: `Tell me the FLR feed value.`,
             },
         },
@@ -372,6 +459,35 @@ export const getWrapTokensExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
+                text: `Wrap 5000 of my tokens`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `Please confirm you want to wrap 5000 tokens on the Flare network.`,
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: `No! I haven't told you the network, and don't do it on Flare!`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `That's true. I apologize for the assumption. I will not proceed with wrapping and am canceling 
+                this request.`,
+                action: "NONE",
+            },
+        },
+    ],
+    [
+        {
+            user: "{{user1}}",
+            content: {
                 text: `Wrap 0.123 of my tokens.`,
             },
         },
@@ -463,6 +579,34 @@ export const getWrapTokensExamples: ActionExample[][] = [
             content: {
                 text: `Alright, I will do it right now.`,
                 action: "WRAP_TOKENS",
+            },
+        },
+    ],
+    [
+        {
+            user: "{{user1}}",
+            content: {
+                text: `Please unwrap 250 of my Songbird tokens`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `I require confirmation, that you want to wrap 250 tokens on the Songbird network.`,
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: `No, you misunderstood me. I want to unwrap or withdraw them.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `I apologize for the error. I will not proceed with the action and am canceling this request.`,
+                action: "NONE",
             },
         },
     ],
@@ -574,6 +718,34 @@ export const getDelegateTokensExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
+                text: `Delegate 1500 bips to 0x9876543210987654321098765432109876543210 on Flare`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `Please confirm you want to delegate 1500 bips to address 0x0123...6789 on Flare network.`,
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: `I'm not confirming, since the address is wrong! Cancel this.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `I made a mistake in understanding your request. I will cancel this delegation entirely.`,
+                action: "NONE",
+            },
+        },
+    ],
+    [
+        {
+            user: "{{user1}}",
+            content: {
                 text: `I want to delegate my wrapped tokens to the address 0x0123456789012345678901234567890123456789, 
                 2500 bips of value.`,
             },
@@ -669,6 +841,34 @@ export const getSignMessageExamples: ActionExample[][] = [
             content: {
                 text: `This is the signature for the given message.`,
                 action: "SIGN_MESSAGE",
+            },
+        },
+    ],
+    [
+        {
+            user: "{{user1}}",
+            content: {
+                text: `Sign this message: "Approve transaction 12345"`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `Please confirm you want to sign the message: "Approve transaction 123"`,
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: `The message is incorrect. Don't sign anything.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `I misunderstood the exact message. I am canceling this request.`,
+                action: "NONE",
             },
         },
     ],
@@ -781,6 +981,36 @@ export const getCheckSignatureExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
+                text: `Verify signature 0xabcd... for message "Hello world".`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `Please confirm you want to verify signature 0xabcd... for message "Hello world" from address 
+                0x0123...6789`,
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: `The signer's address is wrong. I didn't give you one yet, you just used the previously mentioned
+                one. Cancel this check.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `I apologize for doing that. I will cancel this signature verification.`,
+                action: "NONE",
+            },
+        },
+    ],
+    [
+        {
+            user: "{{user1}}",
+            content: {
                 text: `I received a message "free tokens" and its signature 0x0123... Please verify the signature.`,
             },
         },
@@ -879,6 +1109,35 @@ export const getSignAuthorizationExamples: ActionExample[][] = [
             content: {
                 text: `Alright, doing that now.`,
                 action: "SIGN_AUTHORIZATION",
+            },
+        },
+    ],
+    [
+        {
+            user: "{{user1}}",
+            content: {
+                text: `Authorize transfer of 50 tokens to 0x9876543210987654321098765432109876543210 with nonce 5`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `Please confirm you want to authorize a transfer of 50 tokens to 0x0123...6789 with nonce 5`,
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: `The address you have written is incorrect. Don't proceed.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `I misunderstood critical details of your request. I will not generate this authorization and am 
+                canceling it.`,
+                action: "NONE",
             },
         },
     ],
@@ -990,6 +1249,38 @@ export const getSignIntermediaryExamples: ActionExample[][] = [
             content: {
                 text: `Thank you, generating the signatures now.`,
                 action: "SIGN_INTERMEDIARY",
+            },
+        },
+    ],
+    [
+        {
+            user: "{{user1}}",
+            content: {
+                text: `Generate intermediary signatures for transfer of 200 tokens to 
+                0x9876543210987654321098765432109876543210, fee 0.00000001, duration 6 hours, nonce 42`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `Please confirm you want signatures for transfer of 200 tokens to 0x0123...6789, fee 1, 
+                duration 6 hour, nonce 42`,
+                action: "NONE",
+            },
+        },
+        {
+            user: "{{user1}}",
+            content: {
+                text: `This is not the action I requested. The fee and recipient address parameters are wrong. Cancel 
+                this request.`,
+            },
+        },
+        {
+            user: "{{agent}}",
+            content: {
+                text: `I misunderstood some details and mixed them with a previous request request. I will not generate 
+                these signatures and am canceling the operation.`,
+                action: "NONE",
             },
         },
     ],

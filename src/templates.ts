@@ -34,7 +34,8 @@ Example response for the transfer of 10 FLR tokens on Flare to the address 0x012
 }
 
 Before executing the action, ask for the confirmation from the user, about the
-correctness of the understood values.
+correctness of the understood values. If they are not confirmed, do not proceed 
+with this action and disregard the request.
 Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
@@ -74,7 +75,8 @@ Example response for the delegation of 100 bips on Songbird to the address 0x012
 }
 
 Before executing the action, ask for the confirmation from the user, about the
-correctness of the understood values.
+correctness of the understood values. If they are not confirmed, do not proceed 
+with this action and disregard the request.
 Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
@@ -105,7 +107,8 @@ Example response for the query about the stats of flare:
 }
 
 Before executing the action, ask for the confirmation from the user, about the
-correctness of the understood values.
+correctness of the understood values. If they are not confirmed, do not proceed 
+with this action and disregard the request.
 Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
@@ -155,7 +158,8 @@ Example response for the request for unwrapping 100 Songbird tokens:
 }
 
 Before executing the action, ask for the confirmation from the user, about the
-correctness of the understood values.
+correctness of the understood values. If they are not confirmed, do not proceed 
+with this action and disregard the request.
 Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
@@ -189,7 +193,8 @@ Example response for the query for the Bitcoin feed on Flare's FTSO:
 }
 
 Before executing the action, ask for the confirmation from the user, about the
-correctness of the understood values.
+correctness of the understood values. If they are not confirmed, do not proceed 
+with this action and disregard the request.
 Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
@@ -214,7 +219,8 @@ Example response for the request for signing the message "Hey, it's me!":
 }
 
 Before executing the action, ask for the confirmation from the user, about the
-correctness of the understood values.
+correctness of the understood values. If they are not confirmed, do not proceed 
+with this action and disregard the request.
 Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
@@ -248,7 +254,8 @@ for the message "Hey!" from 0x01234...:
 }
 
 Before executing the action, ask for the confirmation from the user, about the
-correctness of the understood values.
+correctness of the understood values. If they are not confirmed, do not proceed 
+with this action and disregard the request.
 Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
@@ -281,7 +288,8 @@ for an amount of 12 tokens. Let the nonce be 11:
 }
 
 Before executing the action, ask for the confirmation from the user, about the
-correctness of the understood values.
+correctness of the understood values. If they are not confirmed, do not proceed 
+with this action and disregard the request.
 Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
@@ -323,6 +331,7 @@ for an amount of 5 and the fee of 0.000000001. The signature has the duration of
 }
 
 Before executing the action, ask for the confirmation from the user, about the
-correctness of the understood values.
+correctness of the understood values. If they are not confirmed, do not proceed 
+with this action and disregard the request.
 Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;

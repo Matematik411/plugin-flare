@@ -57,6 +57,8 @@ export const delegateTokensAction: Action = {
         Before executing the command, write out the understood parameters for the 
         user to check them, then ALWAYS ask for permission to execute the command.
         Only after receiving the user's approval of the parameters, execute it.
+        If the user disagrees with the parameters, do not execute the action and
+        dismiss the request for it.
         DO NOT use this for anything else than delegating tokens.`,
     handler: async (
         runtime: IAgentRuntime,
