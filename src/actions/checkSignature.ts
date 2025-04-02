@@ -55,6 +55,11 @@ export const checkSignatureAction: Action = {
         of length 132 characters, the original message and the address that signed
         it. 
         If any of the arguments are missing or set to "null", ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it.
+        This action does not require a network argument, as the Ethereum signature
+        of a text message is not dependent on it.
         DO NOT use this for anything else than checking message signatures.`,
     handler: async (
         runtime: IAgentRuntime,
@@ -85,7 +90,7 @@ export const checkSignatureAction: Action = {
             content = await generateObject({
                 runtime,
                 context: checkSignatureContext,
-                modelClass: ModelClass.MEDIUM,
+                modelClass: ModelClass.SMALL,
                 schema: CheckSignatureSchema
             });
         } catch (error: any) {

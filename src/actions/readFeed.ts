@@ -50,6 +50,9 @@ export const readFeedAction: Action = {
         Can ONLY BE USED if the user provides the name of the feed and the name
         of the network, on which we read the FTSO.
         If any of the arguments are missing or set to "null", ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it.
         DO NOT use this for anything else than reading an FTSO feed.`,
     handler: async (
         runtime: IAgentRuntime,
@@ -80,7 +83,7 @@ export const readFeedAction: Action = {
             content = await generateObject({
                 runtime,
                 context: readFeedContext,
-                modelClass: ModelClass.MEDIUM,
+                modelClass: ModelClass.SMALL,
                 schema: ReadFeedSchema,
             });
         } catch (error: any) {

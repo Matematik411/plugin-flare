@@ -54,6 +54,9 @@ export const delegateTokensAction: Action = {
         the recipient of the delegation and the network.
         Bips value must be larger than zero.
         If any of the arguments are missing or set to "null", ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it.
         DO NOT use this for anything else than delegating tokens.`,
     handler: async (
         runtime: IAgentRuntime,
@@ -83,7 +86,7 @@ export const delegateTokensAction: Action = {
             content = await generateObject({
                 runtime,
                 context: delegateTokensContext,
-                modelClass: ModelClass.MEDIUM,
+                modelClass: ModelClass.SMALL,
                 schema: DelegateTokensSchema,
             });
         } catch (error: any) {

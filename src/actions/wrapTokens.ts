@@ -58,6 +58,9 @@ export const wrapTokensAction: Action = {
         is wrapping or unwrapping), the amount of tokens they want to exchange
         and the network to do it on.
         If any of the arguments are missing or set to "null", ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it.
         The amount value must be larger than zero.
         DO NOT use this for anything else than exchanging wrapped and standard
         tokens, especially if the user wants to transfer or delegate tokens.`,
@@ -91,7 +94,7 @@ export const wrapTokensAction: Action = {
             content = await generateObject({
                 runtime,
                 context: wrapFlareContext,
-                modelClass: ModelClass.MEDIUM,
+                modelClass: ModelClass.SMALL,
                 schema: WrapTokensSchema,
             });
         } catch (error: any) {

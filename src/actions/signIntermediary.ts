@@ -59,10 +59,15 @@ export const signIntermediaryAction: Action = {
         tokens to be sent, the fee they will pay to the executor, the nonce value
         of the transfer and the validity duration of the signatures.
         If any of the arguments are missing or set to "null", ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it.
         The amount and fee values must be larger than zero.
         The duration is changed into seconds from any other time unit like 
         minutes, hours, days or longer.
         The fee value must be in decimal format and is in string form.
+        This action does not require a network argument, as the tokens used are
+        predetermined.
         DO NOT use this for anything else than generating signatures, especially
         if the user asks to simply transfer tokens.`,
     handler: async (
@@ -93,7 +98,7 @@ export const signIntermediaryAction: Action = {
             content = await generateObject({
                 runtime,
                 context: signIntermediaryContext,
-                modelClass: ModelClass.MEDIUM,
+                modelClass: ModelClass.SMALL,
                 schema: SignIntermediarySchema
             });
         } catch (error: any) {

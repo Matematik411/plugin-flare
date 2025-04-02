@@ -47,8 +47,13 @@ export const signMessageAction: Action = {
         for a text message.
         Can ONLY BE USED if the user has provided a text message to be signed.
         If any of the arguments are missing or set to "null", ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it.
         If a signature of length 132 characters is already given, DO NOT use 
         this action. 
+        This action does not require a network argument, as the Ethereum signature
+        of a text message is not dependent on it.
         DO NOT use this for anything else than generating a signature of a 
         text message.`,
     handler: async (
@@ -80,7 +85,7 @@ export const signMessageAction: Action = {
             content = await generateObject({
                 runtime,
                 context: signMessageContext,
-                modelClass: ModelClass.MEDIUM,
+                modelClass: ModelClass.SMALL,
                 schema: SignMessageSchema
             });
         } catch (error: any) {

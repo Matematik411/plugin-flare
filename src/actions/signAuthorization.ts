@@ -57,7 +57,12 @@ export const signAuthorizationAction: Action = {
         Can ONLY BE USED if the user has provided the recipient and the amount of
         tokens to be sent, the nonce value of the transfer.
         If any of the arguments are missing or set to "null", ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it.
         The amount value must be larger than zero.
+        This action does not require a network argument, as the tokens used are
+        predetermined.
         DO NOT use this for anything else than executing an authorized token
         transfer, especially if the user asks to simply transfer tokens or get
         signatures for an intermediary transfer.`,
@@ -89,7 +94,7 @@ export const signAuthorizationAction: Action = {
             content = await generateObject({
                 runtime,
                 context: signAuthorizationContext,
-                modelClass: ModelClass.MEDIUM,
+                modelClass: ModelClass.SMALL,
                 schema: SignAuthorizationSchema
             });
         } catch (error: any) {

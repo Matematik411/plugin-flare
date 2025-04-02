@@ -42,6 +42,9 @@ export const getStatsAction: Action = {
         The request might be varied, but it will always ask about the stats of 
         Can ONLY BE USED if the user provides the network. 
         If any of the arguments are missing or set to "null", ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it.
         DO NOT use this for anything else than getting the stats of a network.`,
     validate: async (runtime: IAgentRuntime) => {
         await validateFlareConfig(runtime);
@@ -74,7 +77,7 @@ export const getStatsAction: Action = {
             content = await generateObject({
                 runtime,
                 context: getStatsContext,
-                modelClass: ModelClass.MEDIUM,
+                modelClass: ModelClass.SMALL,
                 schema: GetStatsSchema,
             });
         } catch (error: any) {

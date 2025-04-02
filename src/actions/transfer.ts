@@ -55,6 +55,9 @@ export const transferAction: Action = {
         Can ONLY BE USED if the user provides the target address, the amount of 
         tokens to be transferred and the network to do it on.
         If any of the arguments are missing or set to "null", ask for the user to provide them.
+        Before executing the command, write out the understood parameters for the 
+        user to check them, then ALWAYS ask for permission to execute the command.
+        Only after receiving the user's approval of the parameters, execute it.
         The amount value must be larger than zero.
         DO NOT use this for anything else than directly transferring tokens, 
         especially if user asks for a signature of a token transfer or if they
@@ -87,7 +90,7 @@ export const transferAction: Action = {
             content = await generateObject({
                 runtime,
                 context: transferContext,
-                modelClass: ModelClass.MEDIUM,
+                modelClass: ModelClass.SMALL,
                 schema: TransferSchema
             });
         } catch (error: any) {

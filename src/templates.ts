@@ -1,7 +1,8 @@
 export const transferTemplate = `
 {{recentMessages}}
 
-Reading ONLY THE LAST message, extract the following details for processing a native transfer.
+Reading the messages of the last exchange about a native transfer, only after they
+have been confirmed, extract the following details.
 Do not take example values, they are required to be given from the user, use null 
 for any values that cannot be determined. DO NOT use values from already completed 
 actions UNLESS the user specifically asks to read them.
@@ -19,28 +20,29 @@ actions UNLESS the user specifically asks to read them.
     };
 
 Provide the details in the following JSON format:
-\`\`\`json
 {
     "recipient": "<recipient>",
     "amount": <amount>,
     "network": "<network>"
 }
-\`\`\`
     
 Example response for the transfer of 10 FLR tokens on Flare to the address 0x01234...:
-\`\`\`json
 {
     "recipient": "0x01234...",
     "amount": 10,
     "network": "Flare"
 }
-\`\`\`
+
+Before executing the action, ask for the confirmation from the user, about the
+correctness of the understood values.
+Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
 export const delegateTokensTemplate = `
 {{recentMessages}}
 
-Reading ONLY THE LAST message, extract the following details for a delegation of tokens.
+Reading the messages of the last exchange about a wrapped token delegation, only 
+after they have been confirmed, extract the following details.
 Do not take example values, they are required to be given from the user, use null 
 for any values that cannot be determined. DO NOT use values from already completed 
 actions UNLESS the user specifically asks to read them.
@@ -58,29 +60,29 @@ actions UNLESS the user specifically asks to read them.
     };
 
 Provide the details in the following JSON format:
-\`\`\`json
 {
     "delegated": "<delegated>",
     "bips": <bips>,
     "network": "<network>"
 }
-\`\`\`
 
 Example response for the delegation of 100 bips on Songbird to the address 0x01234...:
-\`\`\`json
 {
     "delegated": "0x01234...",
     "bips": 100,
     "network": "Songbird"
 }
-\`\`\`
+
+Before executing the action, ask for the confirmation from the user, about the
+correctness of the understood values.
+Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
 export const getStatsTemplate = `
 {{recentMessages}}
 
-Read ONLY THE LAST message, extract the following details for processing a 
-query for stats of a network.
+Reading the messages of the last exchange about a reading network stats, only after 
+they have been confirmed, extract the following details.
 Do not take example values, they are required to be given from the user, use null 
 for any values that cannot be determined. DO NOT use values from already completed 
 actions UNLESS the user specifically asks to read them.
@@ -93,25 +95,25 @@ actions UNLESS the user specifically asks to read them.
     };
 
 Provide the details in the following JSON format:
-\`\`\`json
 {
     "network": "<network>"
 }
-\`\`\`
 
 Example response for the query about the stats of flare:
-\`\`\`json
 {
     "network": "flare"
 }
-\`\`\`
+
+Before executing the action, ask for the confirmation from the user, about the
+correctness of the understood values.
+Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
 export const wrapTokensTemplate = `
 {{recentMessages}}
 
-Reading ONLY THE LAST message, extract the following details for processing 
-a request for wrapping tokens or withdrawing wrapped tokens.
+Reading the messages of the last exchange about wrapping tokens, only after they
+have been confirmed, extract the following details.
 Do not take example values, they are required to be given from the user, use null 
 for any values that cannot be determined. DO NOT use values from already completed 
 actions UNLESS the user specifically asks to read them.
@@ -132,38 +134,36 @@ actions UNLESS the user specifically asks to read them.
     };
 
 Provide the details in the following JSON format:
-\`\`\`json
 {
     "amount": <amount>,
     "action": "<action>",
     "network": "<network>"
 }
-\`\`\`
 
 Example response for the request for wrapping 1000 FLR tokens:
-\`\`\`json
 {
     "amount": 1000,
     "action": "wrap",
     "network": "Flare"
 }
-\`\`\`
 
 Example response for the request for unwrapping 100 Songbird tokens:
-\`\`\`json
 {
     "amount": 100,
     "action": "withdraw",
     "network": "Songbird"
 }
-\`\`\`
+
+Before executing the action, ask for the confirmation from the user, about the
+correctness of the understood values.
+Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
 export const readFeedTemplate = `
 {{recentMessages}}
 
-Reading ONLY THE LAST message, extract the following details for processing 
-a query for a token feed on the ftso.
+Reading the messages of the last exchange about reading a FTSO feed, only after 
+they have been confirmed, extract the following details.
 Do not take example values, they are required to be given from the user, use null 
 for any values that cannot be determined. DO NOT use values from already completed 
 actions UNLESS the user specifically asks to read them.
@@ -177,52 +177,52 @@ actions UNLESS the user specifically asks to read them.
     };
 
 Provide the details in the following JSON format:
-\`\`\`json
 {
     "feed": "<feed>",
     "network": "<network>"
 }
-\`\`\`
 
 Example response for the query for the Bitcoin feed on Flare's FTSO:
-\`\`\`json
 {
     "feed": "BTC",
     "network": "Flare"
 }
-\`\`\`
+
+Before executing the action, ask for the confirmation from the user, about the
+correctness of the understood values.
+Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
 export const signMessageTemplate = `
 {{recentMessages}}
 
-Read ONLY THE LAST message, extract the following details for processing a signing of a message.
+Reading the messages of the last exchange about signing a text message, only after 
+they have been confirmed, extract the following details.
 Do not take example values, they are required to be given from the user, use null 
 for any values that cannot be determined. DO NOT use values from already completed 
 actions UNLESS the user specifically asks to read them.
 - **message** (string): The message that is to be signed.
 
 Provide the details in the following JSON format:
-\`\`\`json
 {
     "message": "<message>"
 }
-\`\`\`
 
 Example response for the request for signing the message "Hey, it's me!":
-\`\`\`json
 {
     "message": "Hey, it's me!"
 }
-\`\`\`
 
+Before executing the action, ask for the confirmation from the user, about the
+correctness of the understood values.
+Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
 export const checkSignatureTemplate = `
 {{recentMessages}}
 
-Reading ONLY THE LAST message, extract the following details for processing a 
-request to check the message signature.
+Reading the messages of the last exchange about checking a text message signature, 
+only after they have been confirmed, extract the following details.
 Do not take example values, they are required to be given from the user, use null 
 for any values that cannot be determined. DO NOT use values from already completed 
 actions UNLESS the user specifically asks to read them.
@@ -233,30 +233,30 @@ actions UNLESS the user specifically asks to read them.
     This is an Ethereum address that starts with "0x" and has the length of 42.
 
 Provide the details in the following JSON format:
-\`\`\`json
 {
     "message": "<message>",
     "signature": "<signature>",
     "signerAddress": "<signerAddress>"
 }
-\`\`\`
 
 Example response for the request for checking the signature "0x9876..."
 for the message "Hey!" from 0x01234...:
-\`\`\`json
 {
     "message": "Hey!",
     "signature": "0x9876...",
     "signerAddress": "0x01234..."
 }
-\`\`\`
+
+Before executing the action, ask for the confirmation from the user, about the
+correctness of the understood values.
+Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
 export const signAuthorizationTemplate = `
 {{recentMessages}}
 
-Reading ONLY THE LAST message, extract the following details for processing 
-a request for getting a signature of an authorized token transfer
+Reading the messages of the last exchange about signing an authorized transfer, 
+only after they have been confirmed, extract the following details.
 Do not take example values, they are required to be given from the user, use null 
 for any values that cannot be determined. DO NOT use values from already completed 
 actions UNLESS the user specifically asks to read them.
@@ -266,30 +266,30 @@ actions UNLESS the user specifically asks to read them.
 - **nonce** (number): The number that is used as a nonce for the transfer. 
 
 Provide the details in the following JSON format:
-\`\`\`json
 {
     "amount": <amount>,
     "recipient": "<recipient>",
     "nonce": <nonce>,
 }
-\`\`\`
 
 Example response for the request for signing an authorized token transfer to the address 0x1234...
 for an amount of 12 tokens. Let the nonce be 11:
-\`\`\`json
 {
     "amount": 12,
     "recipient": "0x1234...",
     "nonce": 11,
 }
-\`\`\`
+
+Before executing the action, ask for the confirmation from the user, about the
+correctness of the understood values.
+Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
 
 export const signIntermediaryTemplate = `
 {{recentMessages}}
 
-Reading ONLY THE LAST message, extract the following details for processing 
-a request for getting a signature for an intermediary of a token transfer.
+Reading the messages of the last exchange about a generating signatures for an intermediary, 
+only after they have been confirmed, extract the following details.
 Do not take example values, they are required to be given from the user, use null 
 for any values that cannot be determined. DO NOT use values from already completed 
 actions UNLESS the user specifically asks to read them.
@@ -304,7 +304,6 @@ actions UNLESS the user specifically asks to read them.
     in decimal format as a string type. This has to be larger than 0.
 
 Provide the details in the following JSON format:
-\`\`\`json
 {
     "amount": <amount>,
     "recipient": "<recipient>",
@@ -312,11 +311,9 @@ Provide the details in the following JSON format:
     "nonce": <nonce>,
     "fee": "<fee>",
 }
-\`\`\`
 
 Example response for the request for a signature of a token transfer to the address 0x1234...
 for an amount of 5 and the fee of 0.000000001. The signature has the duration of 1 hour and nonce of 42:
-\`\`\`json
 {
     "amount": 5,
     "recipient": "0x1234...",
@@ -324,5 +321,8 @@ for an amount of 5 and the fee of 0.000000001. The signature has the duration of
     "nonce": 42,
     "fee": "0.000000001",
 }
-\`\`\`
+
+Before executing the action, ask for the confirmation from the user, about the
+correctness of the understood values.
+Provide the response ONLY as pure JSON without any Markdown formatting or additional text.
 `;
