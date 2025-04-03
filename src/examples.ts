@@ -216,7 +216,7 @@ export const getTransferExamples: ActionExample[][] = [
             user: "{{agent}}",
             content: {
                 text: `I apologize for the mistake. I will not execute the action and am removing the last request.`,
-                action: "NATIVE_TRANSFER"
+                action: "NONE"
             },
         },
     ],
