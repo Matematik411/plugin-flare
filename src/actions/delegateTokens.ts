@@ -123,7 +123,8 @@ export const delegateTokensAction: Action = {
             const receipt = await getTxReceipt(runtime, callArguments.network as string, tx);
             if (receipt.status === "success") {
                 callback?.({
-                    text: `Delegation was successful, its transaction is: ${receipt.transactionHash}`,
+                    text: `Delegation of ${callArguments.bips} bips to ${callArguments.delegated} on ${callArguments.network} was successful.
+The transaction hash is: ${receipt.transactionHash}`,
                     content: { success: true, txHash: tx },
                 });
             } else {

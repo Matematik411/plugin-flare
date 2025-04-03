@@ -1,3 +1,4 @@
+import { Hash } from "viem";
 import { z } from "zod";
 
 export interface StatsResponse {
@@ -24,10 +25,14 @@ export interface IntermediaryForm {
     validAfter: number;
     validBefore: number;
     nonce: string;
-    fee: bigint;
     signature: string;
+    fee: bigint;
     intermediarySignature: number;
 }
+
+export type ProcessReturn =
+    | { success: true; txHash: Hash }
+    | { success: false; url: string }
 
 export const DelegateTokensSchema = z.object({
     network: z.string(),

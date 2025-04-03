@@ -206,7 +206,9 @@ they have been confirmed, extract the following details.
 Do not take example values, they are required to be given from the user, use null 
 for any values that cannot be determined. DO NOT use values from already completed 
 actions UNLESS the user specifically asks to read them.
-- **message** (string): The message that is to be signed.
+- **message** (string): The message that is to be signed. The user will point it
+    out and it will be specifically marked in quotation marks, after a colon, in 
+    brackets or in some other way.
 
 Provide the details in the following JSON format:
 {

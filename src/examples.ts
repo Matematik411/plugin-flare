@@ -798,7 +798,7 @@ export const getSignMessageExamples: ActionExample[][] = [
         {
             user: "{{agent}}",
             content: {
-                text: `Before signing, please confirm you want to sign the exact message: "This message."`,
+                text: `Before signing, please confirm you want to sign the exact message "This message."`,
                 action: "NONE",
             },
         },
@@ -820,7 +820,7 @@ export const getSignMessageExamples: ActionExample[][] = [
         {
             user: "{{user1}}",
             content: {
-                text: `Generate the signature for the following message "Click for free tokens!".`,
+                text: `Generate the signature for the message inside square brackets [Click for free tokens!].`,
             },
         },
         {
@@ -854,7 +854,7 @@ export const getSignMessageExamples: ActionExample[][] = [
         {
             user: "{{agent}}",
             content: {
-                text: `Please confirm you want to sign the message: "Approve transaction 123"`,
+                text: `Please confirm you want to sign the message "Approve transaction 123"`,
                 action: "NONE",
             },
         },

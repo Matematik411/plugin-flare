@@ -127,7 +127,8 @@ export const transferAction: Action = {
             const receipt = await getTxReceipt(runtime, callArguments.network as string, tx);
             if (receipt.status === "success") {
                 callback?.({
-                    text: `Transfer was successful, the transaction is ${receipt.transactionHash}`,
+                    text: `Transfer of ${callArguments.amount} ${callArguments.network}'s native tokens to ${callArguments.recipient} was successful.
+The transaction hash is ${receipt.transactionHash}`,
                     content: { success: true, txHash: tx },
                 });
             } else {

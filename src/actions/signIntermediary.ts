@@ -127,7 +127,7 @@ export const signIntermediaryAction: Action = {
         )
 
         try {
-            const sigData = await networkService.signIntermediary(
+            const sigData: IntermediaryForm = await networkService.signIntermediary(
                 runtime,
                 callArguments.amount as number,
                 callArguments.recipient as Address,

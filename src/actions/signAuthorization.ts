@@ -16,7 +16,7 @@ import { validateFlareConfig } from "../environment";
 import { getSignAuthorizationExamples } from "../examples";
 import { createNetworkService } from "../services";
 import { signAuthorizationTemplate } from "../templates";
-import { SignAuthorizationSchema } from "../types";
+import { ProcessReturn, SignAuthorizationSchema } from "../types";
 
 export interface SignAuthorizationContent extends Content {
     amount: number;
@@ -123,20 +123,22 @@ export const signAuthorizationAction: Action = {
         )
 
         try {
-            const txHash = await networkService.signAuthorizedTransfer(
+            const response: ProcessReturn = await networkService.signAuthorizedTransfer(
                 runtime,
                 callArguments.amount as number,
                 callArguments.recipient as Address,
                 callArguments.nonce as number,
             );
-            if (txHash) {
+            if (response.success === true) {
                 callback?.({
-                    text: `Authorized transfer was successful with transaction hash ${txHash}.`,
-                    content: { success: true, txHash: txHash }
+                    text: `Authorized transfer of ${callArguments.amount} tokens to ${callArguments.recipient} with nonce ${callArguments.nonce} was successful.
+The transaction hash is ${response.txHash}`,
+                    content: { success: true, txHash: response.txHash }
                 })
             } else {
                 callback?.({
-                    text: `Authorization service action failed, could not authorize the payment.`,
+                    text: `Authorized transfer wasn't processed, it is most likely inaccurate.
+You can check it's status on ${response.url}`,
                     content: { error: "Authorization failed" }
                 })
             }

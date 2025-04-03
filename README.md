@@ -27,7 +27,7 @@ FLARE_PRIVATE_KEY=<your-wallet-private-key>
 
 ### Contract addresses
 
-Setup the contract addresses that are used by the agent. Main contracts are saved on the FlareContractRegistry smart contract which has fixed address and is already filled.
+Setup the contract addresses and their ABIs for the contracts sed by the agent. Main contracts are saved on the FlareContractRegistry smart contract which has fixed address and is already filled.
 
 
 ## Features
@@ -38,5 +38,8 @@ Setup the contract addresses that are used by the agent. Main contracts are save
 - Read FTSO feeds
 - Sign a string message and verify a signature of one
 - Authorize a token transfer and send the signature to the external executor
-  
-Examples can be seen in `examples.ts` and `templates.ts`.
+- Generate signatures of a token transfer for an intermediary
+
+The agent is able to recognize between the requests and execute the tasks with the given parameters. If any of the details required for the action are missing, it asks the user for them. Before executing any action, it asks for verification about the accuracy of the details. Only after the user agrees with them, the action is executed.
+
+Example conversations of all the actions can be seen in `examples.ts`.

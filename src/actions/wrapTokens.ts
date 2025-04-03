@@ -132,8 +132,8 @@ export const wrapTokensAction: Action = {
             const receipt = await getTxReceipt(runtime, callArguments.network as string, tx);
             if (receipt.status === "success") {
                 callback?.({
-                    text: `${callArguments.action} of ${callArguments.amount} tokens on ${callArguments.network} successful, 
-                    with transaction ${receipt.transactionHash}`,
+                    text: `${callArguments.action} of ${callArguments.amount} tokens on ${callArguments.network} was successful.
+The transaction hash is ${receipt.transactionHash}`,
                     content: { success: true, txHash: tx },
                 });
             } else {

@@ -3,6 +3,7 @@ import { Address, bytesToHex, Hash, keccak256, numberToBytes, parseEther, parseS
 import {
     AuthorizationResponse,
     IntermediaryForm,
+    ProcessReturn,
     StatsResponse
 } from "./types";
 import { getAccount, getDecimals, getNetwork, getPublicClient, getWalletClient } from "./utils";
@@ -278,7 +279,7 @@ export const createNetworkService = (chainName: string) => {
         amount: number,
         recipient: Address,
         nonce: number,
-    ): Promise<Hash> => {
+    ): Promise<ProcessReturn> => {
         const publicClient = getPublicClient(runtime, selectedChain);
         const walletClient = getWalletClient(runtime, selectedChain);
 
@@ -350,20 +351,25 @@ export const createNetworkService = (chainName: string) => {
                 "s": sig.s,
                 "v": sig.v.toString()
             }
-            const response: AuthorizationResponse = await postData(executorUrl, postValues);
+            let response: AuthorizationResponse = await postData(executorUrl, postValues);
 
-            if (response.processed == "processed") {
-                return response.tx_hash as Hash;
+            if (response.processed === "unprocessed") {
+                // transaction is not processed yet
+                console.log("Requested authorized transfer isn't processed yet. Waiting 5 seconds before trying again.");
+                const urlCheck = targetUrls["gaslessBackend"] + `/api/v0/signed-message/${response.id}`;
+
+                // wait 5 seconds before checking again
+                await new Promise(resolve => setTimeout(resolve, 5000));
+                response = await (await fetch(urlCheck)).json();
+            }
+
+            // if request was processed return the hash
+            if (response.processed === "processed") {
+                return { success: true, txHash: response.tx_hash as Hash };
             }
             else {
-                // transaction is not processed yet
-                console.log("Requested authorized transfer isn't processed yet.");
-                const urlCheck = targetUrls["gaslessBackend"] + `/api/v0/signed-message/${response.id}`
-                const responseCheck: AuthorizationResponse = await (await fetch(urlCheck)).json();
-
-                console.log("url:", urlCheck)
-                console.log("responseCheck:", responseCheck)
-                return responseCheck.tx_hash as Hash
+                const urlCheck = targetUrls["gaslessBackend"] + `/api/v0/signed-message/${response.id}`;
+                return { success: false, url: urlCheck };
             }
 
         } catch (error: any) {
